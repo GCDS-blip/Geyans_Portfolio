@@ -360,7 +360,7 @@ body.light-mode .starfield-layer {
    ============================================================= */
 .airport-scene {
   position: absolute;
-  left: 0; right: 0; bottom: 4px;
+  left: 0; right: 0; bottom: 0;
   height: 78px;
   pointer-events: none;
   opacity: 0.9;
