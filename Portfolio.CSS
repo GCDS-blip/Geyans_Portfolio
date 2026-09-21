@@ -1,0 +1,3929 @@
+/* =============================================================
+   FLIGHT PLAN — portfolio theme (v5, cabin-crew focused)
+   Matches the real Portfolio.HTML structure exactly.
+   Full aviation theme: navy/gold, PAL-inspired blue/red/white,
+   an airport skyline, and a small fleet of planes on the horizon.
+   ============================================================= */
+   
+:root {
+  --navy: #0b1c2c;
+  --navy-panel: #13293d;
+  --navy-panel-2: #0e2233;
+  --navy-panel-3: #182f45;
+  --gold: #c9a227;
+  --gold-bright: #e4c04f;
+  --gold-soft: rgba(201, 162, 39, 0.35);
+  --cream: #f4ecd8;
+  --accent: #a3522c;
+  --accent-bright: #c96a3d;
+  --text-light: #eae3d3;
+  --text-dim: #9fb0bd;
+
+  /* Philippine Airlines–inspired livery hues, used only for the
+     background plane — not a reproduction of the airline's logo */
+  --pal-blue: #0039a6;
+  --pal-red: #d21034;
+  --pal-white: #f5f7fa;
+
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  /* ✈️ AIRPLANE CURSOR — Gold */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e4c04f"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>') 12 12, auto;
+}
+
+/* ✈️ BUTTON & LINK HOVER — Brighter Gold Airplane Cursor */
+a:hover, button:hover, .chatbot-toggle:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd700"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>') 12 12, pointer;
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+body {
+  font-family: var(--sans);
+  color: var(--text-light);
+  background: var(--navy);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.6;
+  /* Sticky footer: body is a column flex container so the footer is
+     pushed to the bottom of the viewport even on pages whose content
+     (About Me, Skills, Achievements, Contact, etc.) is shorter than
+     the screen — not just on Home where the hero fills the space. */
+  display: flex;
+  flex-direction: column;
+}
+
+body > * { position: relative; z-index: 1; }
+
+/* =============================================================
+   BACKGROUND — .network-glow
+   Layered dusk-to-dawn sky: stars, drifting clouds, a small fleet
+   of PAL-style planes with contrails, an airport skyline (control
+   tower + terminal) on the horizon, and runway chase-lights.
+   ============================================================= */
+.network-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    #040a13 0%,
+    #0b1c2c 32%,
+    #15304a 58%,
+    #3a2a16 85%,
+    #4a3016 100%
+  );
+}
+
+/* twinkling stars */
+.network-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 15% 20%, rgba(234,227,211,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 35% 12%, rgba(234,227,211,0.5), transparent),
+    radial-gradient(1px 1px at 55% 28%, rgba(234,227,211,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 75% 8%, rgba(234,227,211,0.55), transparent),
+    radial-gradient(1px 1px at 85% 22%, rgba(234,227,211,0.35), transparent),
+    radial-gradient(1.5px 1.5px at 25% 35%, rgba(234,227,211,0.35), transparent),
+    radial-gradient(1px 1px at 65% 15%, rgba(234,227,211,0.45), transparent),
+    radial-gradient(1.5px 1.5px at 45% 40%, rgba(234,227,211,0.3), transparent),
+    radial-gradient(1px 1px at 92% 33%, rgba(234,227,211,0.4), transparent);
+  animation: twinkle 4.5s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.55; }
+  100% { opacity: 1; }
+}
+
+/* =============================================================
+   EXTRA STARFIELD — a scattered handful of individually twinkling
+   stars (a few brighter gold ones mixed in), layered on top of the
+   base twinkling-stars gradient above for extra depth. Injected as
+   one real SVG (.starfield-layer) right into .network-glow by
+   script.js, sitting behind the planes/airport. Dark-mode only.
+   ============================================================= */
+.starfield-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+  transition: opacity 1s ease;
+}
+.starfield-layer svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.star-point {
+  fill: #eae3d3;
+  filter: drop-shadow(0 0 3px rgba(234, 227, 211, 0.75));
+  animation: starTwinkle 3.4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.star-point.bright {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 5px rgba(228, 192, 79, 0.85));
+}
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+body.light-mode .starfield-layer {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .star-point { animation: none; opacity: 0.85; }
+}
+@media (max-width: 640px) {
+  .starfield-layer { opacity: 0.65; }
+}
+
+/* warm horizon glow, breathing slowly */
+.network-glow .horizon-glow {
+  position: absolute;
+  left: 0; right: 0; bottom: -10%;
+  height: 40%;
+  background: radial-gradient(60% 100% at 50% 100%, rgba(228, 192, 79, 0.22), transparent 70%);
+  animation: horizonPulse 8s ease-in-out infinite;
+}
+@keyframes horizonPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* drifting clouds — three layers, different speeds/depths */
+.cloud {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(234, 227, 211, 0.06);
+  filter: blur(1px);
+}
+.cloud::before, .cloud::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: inherit;
+}
+.cloud-1 { top: 10%; width: 180px; height: 34px; left: -20%; animation: driftSlow 48s linear infinite; }
+.cloud-1::before { width: 90px; height: 50px; top: -22px; left: 20px; }
+.cloud-1::after { width: 70px; height: 40px; top: -14px; left: 90px; }
+.cloud-2 { top: 26%; width: 130px; height: 26px; left: -20%; animation: driftSlow 62s linear infinite; animation-delay: -18s; opacity: 0.8; }
+.cloud-2::before { width: 60px; height: 34px; top: -14px; left: 16px; }
+.cloud-2::after { width: 50px; height: 28px; top: -10px; left: 62px; }
+.cloud-3 { top: 42%; width: 100px; height: 20px; left: -20%; animation: driftSlow 75s linear infinite; animation-delay: -40s; opacity: 0.55; }
+.cloud-3::before { width: 46px; height: 26px; top: -10px; left: 12px; }
+.cloud-3::after { width: 38px; height: 22px; top: -8px; left: 48px; }
+
+@keyframes driftSlow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(140vw); }
+}
+
+/* runway chase-lights along the bottom of the viewport */
+.network-glow .runway-lights {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  display: flex;
+  gap: 26px;
+  padding-left: 6px;
+  overflow: hidden;
+}
+.runway-lights span {
+  width: 8px; height: 4px; flex-shrink: 0;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.7);
+  border-radius: 2px;
+  animation: chaseLight 1.8s ease-in-out infinite;
+}
+@keyframes chaseLight {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+/* --- the PAL-style plane, drawn as CSS shapes so its livery
+   colors are ours to set (not a copy of any logo/artwork) --- */
+.pal-plane {
+  position: absolute;
+  top: 16%;
+  left: -14%;
+  width: 130px;
+  height: 46px;
+  animation: palFlyAcross 32s linear infinite;
+  will-change: transform;
+}
+.pal-plane .contrail {
+  position: absolute;
+  right: 100%; top: 21px;
+  width: 160px; height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(245,247,250,0.35));
+  border-radius: 2px;
+}
+.pal-plane .fuselage {
+  position: absolute;
+  left: 0; top: 16px;
+  width: 120px; height: 16px;
+  background: var(--pal-white);
+  border-radius: 10px 40px 40px 10px;
+  box-shadow: 0 0 14px rgba(245, 247, 250, 0.3);
+}
+.pal-plane .fuselage::before {
+  content: "";
+  position: absolute;
+  right: -8px; top: 2px;
+  width: 18px; height: 12px;
+  background: var(--pal-white);
+  border-radius: 0 30px 30px 0;
+}
+.pal-plane .stripe {
+  position: absolute;
+  left: 6px; top: 22px;
+  width: 108px; height: 4px;
+  background: var(--pal-blue);
+  border-radius: 2px;
+}
+.pal-plane .stripe::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 6px;
+  width: 108px; height: 2px;
+  background: var(--pal-red);
+  border-radius: 2px;
+}
+.pal-plane .tail {
+  position: absolute;
+  left: -2px; top: -8px;
+  width: 22px; height: 30px;
+  background: var(--pal-blue);
+  clip-path: polygon(0% 100%, 100% 100%, 40% 0%);
+}
+.pal-plane .tail::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 12px;
+  width: 8px; height: 8px;
+  background: var(--pal-red);
+  border-radius: 50%;
+}
+.pal-plane .wing {
+  position: absolute;
+  left: 46px; top: 14px;
+  width: 46px; height: 26px;
+  background: var(--pal-white);
+  clip-path: polygon(0% 40%, 60% 0%, 100% 100%, 10% 100%);
+  opacity: 0.92;
+}
+@keyframes palFlyAcross {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  4%   { opacity: 1; }
+  50%  { transform: translate(60vw, -8vh); }
+  96%  { opacity: 1; }
+  100% { transform: translate(122vw, -14vh); opacity: 0; }
+}
+
+/* --- descending fleet: these depart from the right edge, high up,
+   and glide down-left toward the terminal/passengers. The mirror
+   is done on a nested .plane-flip wrapper (static scaleX(-1)) so
+   it never fights the outer element's translate keyframe. --- */
+.pal-plane.flight-down {
+  left: auto;
+  right: -14%;
+  animation-name: palFlyDescend;
+}
+.pal-plane.flight-down .plane-flip {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(-1);
+}
+@keyframes palFlyDescend {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  4%   { opacity: 1; }
+  55%  { transform: translate(-58vw, 20vh); }
+  94%  { opacity: 1; }
+  100% { transform: translate(-108vw, 38vh); opacity: 0; }
+}
+
+/* --- the fleet: 10 planes total, each on its own path, speed,
+   depth (via the independent `scale` property so it never fights
+   the keyframe's `transform`) and delay, for a busy sky. Planes
+   1–5 climb away (top right); planes 6–10 descend toward the
+   passengers waiting near the terminal. --- */
+.plane-1 { top: 10%; animation-duration: 26s; animation-delay: 0s;   scale: 0.85; opacity: 0.9; }
+.plane-2 { top: 24%; animation-duration: 34s; animation-delay: -11s; scale: 1;    opacity: 1; }
+.plane-3 { top: 36%; animation-duration: 41s; animation-delay: -23s; scale: 0.7;  opacity: 0.75; }
+.plane-4 { top: 6%;  animation-duration: 29s; animation-delay: -6s;  scale: 1.1;  opacity: 1; }
+.plane-5 { top: 30%; animation-duration: 47s; animation-delay: -34s; scale: 0.6;  opacity: 0.6; }
+.plane-6  { top: 4%;  animation-duration: 30s; animation-delay: -4s;  scale: 0.9;  opacity: 0.85; }
+.plane-7  { top: 14%; animation-duration: 38s; animation-delay: -16s; scale: 0.65; opacity: 0.7; }
+.plane-8  { top: 20%; animation-duration: 25s; animation-delay: -9s;  scale: 1.05; opacity: 0.95; }
+.plane-9  { top: 9%;  animation-duration: 44s; animation-delay: -28s; scale: 0.55; opacity: 0.55; }
+.plane-10 { top: 27%; animation-duration: 33s; animation-delay: -19s; scale: 0.8;  opacity: 0.8; }
+
+@media (max-width: 640px) {
+  .pal-plane { width: 90px; height: 32px; }
+  .pal-plane .fuselage { width: 84px; height: 11px; top: 11px; }
+  .pal-plane .stripe { width: 76px; left: 4px; top: 15px; }
+  .pal-plane .stripe::after { width: 76px; }
+  .pal-plane .wing { left: 32px; top: 10px; width: 32px; height: 18px; }
+  .pal-plane .tail { width: 16px; height: 21px; top: -6px; }
+  /* keep the sky readable on small screens — 5 planes instead of 10 */
+  .plane-4, .plane-5, .plane-8, .plane-9, .plane-10 { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pal-plane, .cloud, .runway-lights span, .network-glow::before, .horizon-glow,
+  .control-tower::after, .airport-terminal .window-row {
+    animation: none !important;
+  }
+  .plane-2, .plane-3, .plane-4, .plane-5,
+  .plane-6, .plane-7, .plane-8, .plane-9, .plane-10 { display: none; }
+  .pal-plane.plane-1 { left: 8%; top: 16%; opacity: 1; scale: 1; }
+}
+
+/* =============================================================
+   AIRPORT SKYLINE — control tower + terminal on the horizon,
+   bottom-left, mirroring the chatbot bubble on the opposite corner.
+   ============================================================= */
+.airport-scene {
+  position: absolute;
+  left: 0; right: 0; bottom: 4px;
+  height: 78px;
+  pointer-events: none;
+  opacity: 0.9;
+}
+.airport-terminal {
+  position: absolute;
+  left: 4%; bottom: 0;
+  width: 190px; height: 30px;
+  background: linear-gradient(180deg, rgba(24,47,69,0.92), rgba(10,25,40,0.97));
+  border-top: 2px solid rgba(201, 162, 39, 0.4);
+  box-shadow: 0 0 22px rgba(0,0,0,0.4);
+}
+.airport-terminal .window-row {
+  position: absolute;
+  left: 10px; right: 10px; top: 9px;
+  height: 6px;
+  background-image: repeating-linear-gradient(90deg, rgba(228, 192, 79, 0.8) 0 5px, transparent 5px 17px);
+  animation: windowFlicker 5s ease-in-out infinite alternate;
+}
+@keyframes windowFlicker {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.control-tower {
+  position: absolute;
+  left: 21%; bottom: 0;
+  width: 16px; height: 72px;
+  background: linear-gradient(180deg, rgba(24,47,69,0.95), rgba(10,25,40,0.98));
+  box-shadow: 0 0 16px rgba(0,0,0,0.35);
+}
+.control-tower::before {
+  /* observation cab */
+  content: "";
+  position: absolute;
+  top: -14px; left: -10px;
+  width: 36px; height: 16px;
+  background: rgba(15, 35, 55, 0.96);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 3px;
+}
+.control-tower::after {
+  /* blinking beacon */
+  content: "";
+  position: absolute;
+  top: -22px; left: 50%;
+  transform: translateX(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--pal-red);
+  box-shadow: 0 0 10px rgba(210, 16, 52, 0.9);
+  animation: beaconBlink 1.4s steps(1, end) infinite;
+}
+@keyframes beaconBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.15; }
+}
+@media (max-width: 640px) {
+  .airport-scene { transform: scale(0.72); transform-origin: bottom left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .control-tower::after { animation: none; opacity: 0.7; }
+  .airport-terminal .window-row { animation: none; opacity: 0.8; }
+}
+
+/* =============================================================
+   FLEET LIVERIES + NATIONAL FLAGS — each of the 10 planes
+   represents a different country: its livery uses a color
+   scheme evoking that country's flagship airline (colors only —
+   never a logo or wordmark), plus a small national-flag decal
+   near the tail. Injected by script.js as extra classes/markup
+   on the existing .pal-plane elements.
+   ============================================================= */
+
+.pal-plane.livery-usa .stripe        { background: #c8102e; }
+.pal-plane.livery-usa .stripe::after { background: #003a70; }
+.pal-plane.livery-usa .tail          { background: #003a70; }
+.pal-plane.livery-usa .tail::after   { background: #c8102e; }
+
+.pal-plane.livery-japan .stripe        { background: #bc002d; }
+.pal-plane.livery-japan .stripe::after { background: transparent; }
+.pal-plane.livery-japan .tail          { background: #bc002d; }
+.pal-plane.livery-japan .tail::after   { background: #fff; }
+
+.pal-plane.livery-uk .stripe        { background: #075aaa; }
+.pal-plane.livery-uk .stripe::after { background: #c8102e; }
+.pal-plane.livery-uk .tail          { background: #075aaa; }
+.pal-plane.livery-uk .tail::after   { background: #c8102e; }
+
+.pal-plane.livery-france .stripe        { background: #002157; }
+.pal-plane.livery-france .stripe::after { background: #ed2939; }
+.pal-plane.livery-france .tail          { background: #002157; }
+.pal-plane.livery-france .tail::after   { background: #ed2939; }
+
+.pal-plane.livery-germany .stripe        { background: #05164d; }
+.pal-plane.livery-germany .stripe::after { background: #f9ba00; }
+.pal-plane.livery-germany .tail          { background: #05164d; }
+.pal-plane.livery-germany .tail::after   { background: #f9ba00; }
+
+.pal-plane.livery-australia .stripe        { background: #e40000; }
+.pal-plane.livery-australia .stripe::after { background: #fff; }
+.pal-plane.livery-australia .tail          { background: #e40000; }
+.pal-plane.livery-australia .tail::after   { background: #fff; }
+
+.pal-plane.livery-singapore .stripe        { background: #fdb913; }
+.pal-plane.livery-singapore .stripe::after { background: #003876; }
+.pal-plane.livery-singapore .tail          { background: #003876; }
+.pal-plane.livery-singapore .tail::after   { background: #fdb913; }
+
+.pal-plane.livery-korea .stripe        { background: #00256c; }
+.pal-plane.livery-korea .stripe::after { background: #c8102e; }
+.pal-plane.livery-korea .tail          { background: #00256c; }
+.pal-plane.livery-korea .tail::after   { background: #c8102e; }
+
+.pal-plane.livery-uae .stripe        { background: #d4af37; }
+.pal-plane.livery-uae .stripe::after { background: #c8102e; }
+.pal-plane.livery-uae .tail          { background: #d4af37; }
+.pal-plane.livery-uae .tail::after   { background: #c8102e; }
+
+/* --- small national-flag decal near the tail of each plane --- */
+.pal-plane .mini-flag {
+  position: absolute;
+  left: 3px; top: -6px;
+  width: 9px; height: 6px;
+  border-radius: 1px;
+  overflow: hidden;
+  box-shadow: 0 0 2px rgba(0,0,0,0.4);
+}
+.mini-flag.ph { background: linear-gradient(180deg, #0038a8 50%, #ce1126 50%); }
+.mini-flag.ph::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 48%;
+  background: #fff; clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.mini-flag.usa { background: repeating-linear-gradient(180deg, #b22234 0 1px, #fff 1px 2px); }
+.mini-flag.usa::before {
+  content: ""; position: absolute; left: 0; top: 0; width: 42%; height: 55%; background: #3c3b6e;
+}
+.mini-flag.japan { background: #f5f5f0; }
+.mini-flag.japan::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 3px;
+  border-radius: 50%; background: #bc002d; transform: translate(-50%, -50%);
+}
+.mini-flag.uk { background: #00247d; }
+.mini-flag.uk::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom right, transparent 42%, #fff 42% 58%, transparent 58%),
+    linear-gradient(to bottom left,  transparent 42%, #fff 42% 58%, transparent 58%);
+}
+.mini-flag.uk::after {
+  content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px;
+  background: #cf142b; transform: translateX(-50%);
+}
+.mini-flag.france { background: linear-gradient(90deg, #0055a4 0 33%, #fff 33% 66%, #ef4135 66% 100%); }
+.mini-flag.germany { background: linear-gradient(180deg, #000 0 33%, #dd0000 33% 66%, #ffce00 66% 100%); }
+.mini-flag.australia { background: #00247d; }
+.mini-flag.australia::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom right, transparent 42%, #fff 42% 58%, transparent 58%);
+}
+.mini-flag.singapore { background: linear-gradient(180deg, #ed2939 50%, #fff 50%); }
+.mini-flag.korea { background: #fff; }
+.mini-flag.korea::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px;
+  border-radius: 50%; transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #cd2e3a 50%, #0047a0 50%);
+}
+.mini-flag.uae { background: linear-gradient(180deg, #00732f 0 33%, #fff 33% 66%, #000 66% 100%); }
+.mini-flag.uae::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 26%; background: #ff0000;
+}
+
+/* mirrored planes (6-10) carry their mini-flag inside .plane-flip so it flips with the rest */
+.pal-plane.flight-down .mini-flag { left: 3px; top: -6px; }
+
+@media (max-width: 640px) {
+  .pal-plane .mini-flag { width: 7px; height: 5px; top: -4px; }
+}
+
+/* =============================================================
+   PASSENGERS — a small queue waiting near the terminal, plus
+   the occasional traveler crossing the tarmac in the distance.
+   Pure silhouettes (head + body), same warm/navy palette as the
+   rest of the scene, injected by script.js — no HTML changes.
+   ============================================================= */
+.passengers-queue {
+  position: absolute;
+  left: 4%;
+  bottom: 0;
+  width: 190px;
+  height: 22px;
+  pointer-events: none;
+}
+.queue-passenger {
+  position: absolute;
+  bottom: 0;
+  width: 6px;
+  height: 15px;
+  transform-origin: bottom center;
+  animation: passengerSway 3.6s ease-in-out infinite;
+}
+.queue-passenger::before {
+  /* head */
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(228, 192, 79, 0.6);
+}
+.queue-passenger::after {
+  /* body */
+  content: "";
+  position: absolute;
+  top: 5px; left: 0;
+  width: 6px; height: 10px;
+  background: rgba(9, 20, 33, 0.9);
+  border-radius: 2px 2px 1px 1px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+}
+@keyframes passengerSway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%      { transform: rotate(1.5deg); }
+}
+
+/* a lone traveler that occasionally walks the length of the tarmac */
+.walking-passenger {
+  position: absolute;
+  left: -4%;
+  width: 6px;
+  height: 11px;
+  background: rgba(9, 20, 33, 0.85);
+  border-radius: 2px 2px 1px 1px;
+  opacity: 0;
+  animation-name: passengerWalk;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+.walking-passenger::before {
+  /* head */
+  content: "";
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(228, 192, 79, 0.55);
+}
+.walking-passenger::after {
+  /* small rolling bag trailing behind */
+  content: "";
+  position: absolute;
+  bottom: 0; left: -5px;
+  width: 3px; height: 5px;
+  background: rgba(9, 20, 33, 0.75);
+  border-radius: 1px;
+}
+@keyframes passengerWalk {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  6%   { opacity: 0.85; }
+  25%  { transform: translate(25vw, -2px); }
+  50%  { transform: translate(50vw, 0); }
+  75%  { transform: translate(75vw, -2px); }
+  94%  { opacity: 0.85; }
+  100% { transform: translate(107vw, 0); opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .passengers-queue { transform: scale(0.75); transform-origin: bottom left; }
+}
+
+main { display: block; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ================= PAGE SWITCHER (single-file, multi-page feel) =================
+   Every "page" section is hidden by default so the correct one shows even
+   before script.js has a chance to run; script.js reveals whichever page
+   matches the current nav selection / URL hash. */
+#page-home, #about-me, #Skills, #Education, #Achievements, #Contact, #Destinations { display: none; }
+
+/* === NAVBAR === */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(180deg, rgba(14,34,51,0.9), rgba(14,34,51,0.8));
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border-bottom: 1px solid var(--gold-soft);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.navbar a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 8px 6px;
+  position: relative;
+  transition: color 0.25s ease;
+}
+.navbar a:hover { color: var(--gold-bright); }
+.navbar a.active { color: var(--gold-bright); font-weight: 700; }
+.navbar a.active::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--accent-bright));
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.6);
+}
+
+/* === Mode Switch === */
+.mode-switch {
+  list-style: none;
+  margin-left: 10px;
+  width: 54px;
+  height: 29px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-panel-3));
+  border: 1px solid var(--gold-soft);
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+}
+.mode-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 21px; height: 21px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(201, 162, 39, 0.6);
+  transition: all 0.3s ease;
+}
+.mode-switch .icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 12px; transition: opacity 0.3s ease; }
+.mode-switch .sun { left: 5px; opacity: 1; }
+.mode-switch .moon { right: 5px; opacity: 0; }
+
+body.light-mode .mode-switch { background: linear-gradient(135deg, var(--cream), #e8dcc3); border-color: rgba(29, 79, 168, 0.4); }
+body.light-mode .mode-switch::after { left: 28px; background: linear-gradient(135deg, var(--accent-bright), var(--accent)); }
+body.light-mode .mode-switch .sun { opacity: 0; }
+body.light-mode .mode-switch .moon { opacity: 1; }
+
+/* === HOME/HERO === */
+#page-home {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ---------- FX teaser — small preview card at the bottom of Home,
+   linking to the full Foreign Exchange board on About Me /
+   Destinations. Deliberately compact: one flag + rate + CTA. ---------- */
+.fx-teaser {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto 60px;
+  padding: 0.9rem 1.4rem;
+  border-radius: 14px;
+  border: 1px solid var(--gold-soft);
+  background: linear-gradient(90deg, rgba(179,16,46,0.14), rgba(11,61,145,0.14));
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.fx-teaser:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.3);
+  border-color: var(--gold-bright);
+}
+.fx-teaser-icon { font-size: 1.4rem; flex: 0 0 auto; }
+.fx-teaser-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.fx-teaser-label {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.fx-teaser-value {
+  font-family: 'Courier New', ui-monospace, monospace;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--gold-bright);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fx-teaser-flag {
+  width: 18px;
+  height: 13px;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+  margin-right: 2px;
+}
+.fx-teaser-cta {
+  flex: 0 0 auto;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+  white-space: nowrap;
+}
+body.light-mode .fx-teaser {
+  background: linear-gradient(90deg, rgba(179,16,46,0.08), rgba(29,79,168,0.08));
+  border-color: rgba(29,79,168,0.3);
+}
+body.light-mode .fx-teaser-value { color: var(--accent); }
+body.light-mode .fx-teaser-cta { color: var(--accent); }
+body.light-mode .fx-teaser-label { color: #4a4a4a; }
+@media (max-width: 640px) {
+  .fx-teaser { flex-wrap: wrap; padding: 0.8rem 1rem; margin-bottom: 30px; }
+  .fx-teaser-cta { width: 100%; text-align: right; }
+}
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 60px auto;
+  padding: 3.6rem 3.2rem;
+  background:
+    linear-gradient(90deg, var(--pal-red) 0 33%, var(--pal-blue) 33% 66%, var(--pal-red) 66% 100%) top / 100% 6px no-repeat,
+    linear-gradient(160deg, rgba(24,47,69,0.92), rgba(11,28,44,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 25px 55px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  /* ticket-stub perforation edge, aviation nod */
+  content: "";
+  position: absolute;
+  left: 0; top: 6px; bottom: 0;
+  width: 10px;
+  background: repeating-linear-gradient(180deg, var(--gold) 0 6px, transparent 6px 16px);
+  opacity: 0.55;
+}
+.hero::after {
+  /* corner fold, menu-card nod */
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 46px 46px 0;
+  border-color: transparent var(--accent) transparent transparent;
+  opacity: 0.85;
+}
+.hero-info { flex: 1; display: flex; flex-direction: column; padding-left: 14px; }
+
+/* "BOARDING PASS" ticket header — sits above the greeting */
+.boarding-pass-label {
+  display: block;
+  order: -1;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  border-bottom: 1px dashed var(--gold-soft);
+  width: fit-content;
+}
+
+/* boarding-pass style flight fields — sits below the quote */
+.hero-info::after {
+  content: "FLIGHT PCU·IT1C   ·   SEAT 2C   ·   GATE 3C   ·   ECONOMY CLASS";
+  order: 1;
+  font-family: 'Courier New', var(--sans), monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--gold-bright);
+  opacity: 0.85;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--gold-soft);
+  width: fit-content;
+}
+.greeting {
+  font-family: var(--sans);
+  color: var(--gold-bright);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+.hero-info h1 {
+  font-family: var(--serif);
+  font-size: 3.3rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 18px 0;
+  color: var(--gold-bright); /* fallback if background-clip: text isn't supported */
+  background: linear-gradient(100deg,
+    var(--text-light) 0%, var(--text-light) 30%,
+    var(--gold-bright) 50%,
+    var(--text-light) 70%, var(--text-light) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroShimmer 5s linear infinite;
+}
+@keyframes heroShimmer {
+  0%   { background-position: 200% 50%; }
+  100% { background-position: -20% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-info h1 { animation: none; }
+}
+
+/* typing effect on the hero name, right after the intro clears */
+.typing-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  margin-left: 3px;
+  vertical-align: -0.08em;
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(228, 192, 79, 0.6);
+  animation: typingBlink 0.9s steps(1) infinite;
+}
+.typing-cursor.typing-done {
+  animation: typingBlinkSlow 1.6s steps(1) infinite;
+}
+@keyframes typingBlink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes typingBlinkSlow {
+  0%, 49%  { opacity: 0.6; }
+  50%, 100% { opacity: 0; }
+}
+.hero-info .subtitle {
+  font-family: var(--sans);
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin: 0 0 22px 0;
+  line-height: 1.6;
+}
+.hero-info h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 16px 22px;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  background: linear-gradient(90deg, rgba(201,162,39,0.1), rgba(29, 79, 168, 0.06));
+  width: fit-content;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* CTA button — sits below the quote, matches the PAL-blue livery color.
+   !important on positioning/layout props below is defensive: fix.css
+   loads after this file and may carry older rules for links inside
+   .hero-info that would otherwise float/position this element. */
+.hero-info .download-cv-btn {
+  order: 2;
+  position: static !important;
+  float: none !important;
+  top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin: 26px 0 0 0 !important;
+  padding: 13px 26px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #1c5fd6, var(--pal-blue));
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 57, 166, 0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform 0.35s var(--ease-premium), box-shadow 0.35s var(--ease-premium), filter 0.25s ease;
+  animation: ctaPulse 3.2s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 10px 24px rgba(0, 57, 166, 0.45), inset 0 1px 0 rgba(255,255,255,0.2); }
+  50%      { box-shadow: 0 10px 30px rgba(0, 57, 166, 0.7), 0 0 0 6px rgba(28,95,214,0.12), inset 0 1px 0 rgba(255,255,255,0.2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-info .download-cv-btn { animation: none; }
+}
+.download-cv-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.download-cv-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0, 57, 166, 0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+  filter: brightness(1.08);
+}
+.download-cv-btn:active { transform: translateY(-1px); }
+
+.hero-image-container { flex-shrink: 0; position: relative; }
+.hero-image-container::before {
+  /* perforated tear-line between the main stub and the photo stub */
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: -50px; bottom: -50px;
+  width: 14px;
+  transform: translateX(-50%);
+  background-image:
+    radial-gradient(circle at center, var(--gold-bright) 5px, transparent 6px),
+    radial-gradient(circle at center, var(--gold-bright) 5px, transparent 6px),
+    repeating-linear-gradient(180deg, var(--gold-soft) 0 6px, transparent 6px 16px);
+  background-position: 50% 8px, 50% calc(100% - 8px), 50% 0;
+  background-size: 12px 12px, 12px 12px, 2px 100%;
+  background-repeat: no-repeat, no-repeat, repeat-y;
+  opacity: 0.75;
+}
+.hero-image-container img {
+  width: 220px;
+  height: 310px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 3px solid var(--gold-soft);
+  outline: 5px solid rgba(201, 162, 39, 0.12);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 30px rgba(201,162,39,0.15);
+  display: block;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.hero-image-container img:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 22px 48px rgba(0,0,0,0.55), 0 0 45px rgba(201,162,39,0.3);
+}
+.hero-image-container::after {
+  content: "✈ FLIGHT ATTENDANT ASPIRANT";
+  position: absolute;
+  bottom: -16px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--navy);
+  background:
+    repeating-linear-gradient(90deg, rgba(11,28,44,0.55) 0 2px, transparent 2px 4px, rgba(11,28,44,0.55) 4px 5px, transparent 5px 9px) top / 100% 9px no-repeat,
+    linear-gradient(90deg, var(--gold-bright), var(--accent-bright));
+  padding: 15px 16px 6px 16px;
+  border-radius: 4px 4px 10px 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+@media (max-width: 768px) {
+  /* stays side-by-side (row) like the boarding pass on desktop —
+     just shrinks everything down so it still fits a narrow screen */
+  .hero { flex-direction: row; align-items: center; padding: 2rem 1.4rem; gap: 20px; }
+  .hero-info { padding-left: 0; }
+  .hero-info h1 { font-size: 1.5rem; }
+  .hero-info .subtitle { font-size: 0.82rem; }
+  .hero-info h3 { font-size: 0.85rem; padding: 10px 14px; }
+  .boarding-pass-label { font-size: 0.6rem; }
+  .hero-info::after { font-size: 0.58rem; white-space: normal; }
+  .download-cv-btn { padding: 10px 18px; font-size: 0.82rem; }
+  .hero-image-containear img { width: 110px; height: 150px; }
+  .hero-image-container::before { display: none; }
+  .hero-image-container::after { font-size: 0.5rem; white-space: normal; text-align: center; width: 130px; padding: 10px 8px 5px 8px; }
+}
+@media (max-width: 520px) {
+  /* extra-small phones: trim further but keep the row layout */
+  .hero { padding: 1.6rem 1rem; gap: 12px; }
+  .hero-info h1 { font-size: 1.15rem; }
+  .hero-info .subtitle { font-size: 0.74rem; }
+  .hero-info h3 { font-size: 0.74rem; padding: 8px 10px; }
+  .hero-info::after { display: none; }
+  .hero-image-container img { width: 82px; height: 112px; }
+  .hero-image-container::after { display: none; }
+}
+
+/* === MY DREAM DESTINATIONS === */
+.destinations-showcase {
+  width: 90%;
+  max-width: 1200px; 
+  margin: 40px auto 60px;
+  padding: 3rem 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+.destinations-showcase::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 35%, var(--accent-bright) 65%, var(--accent) 100%);
+}
+.destinations-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.destinations-tag {
+  display: inline-block;
+  order: -1;
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  background: rgba(201, 162, 39, 0.12);
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+}
+.destinations-header h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 2rem;
+  color: var(--gold-bright);
+  margin: 0 0 0.6rem 0;
+}
+.destinations-subtitle {
+  font-family: var(--sans);
+  color: var(--text-dim);
+  font-size: 1rem;
+  margin: 0;
+  max-width: 640px;
+}
+
+/* === FOREIGN EXCHANGE BOARD === */
+.fxboard {
+  margin: 3.2rem 0 2.4rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--gold-soft);
+  box-shadow: 0 0 0 1px rgba(201,162,39,0.15), 0 16px 40px rgba(0,0,0,0.35);
+  background: #050d1a;
+}
+.fxboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, #b3102e, #7a0a1f);
+  padding: 12px 18px;
+}
+.fxboard-title {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 1.05rem;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.fxboard-clock {
+  text-align: right;
+  line-height: 1.15;
+}
+.fxboard-time {
+  display: block;
+  font-family: 'Courier New', ui-monospace, monospace;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.fxboard-date {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.85);
+}
+.fxboard-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 14px;
+  padding: 14px 18px 6px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(11,61,145,0.35), transparent 55%),
+    linear-gradient(180deg, #0a1d3d 0%, #061024 100%);
+}
+.fxboard-colhead {
+  display: grid;
+  grid-template-columns: 1.5fr 1.7fr 0.9fr;
+  gap: 6px;
+  background: linear-gradient(135deg, #b3102e, #7a0a1f);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-bottom: 4px;
+}
+.fxboard-colhead span:nth-child(3) { text-align: right; }
+.fxboard-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1.7fr 0.9fr;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+  background: rgba(11, 61, 145, 0.16);
+}
+.fxboard-row:nth-child(even) { background: rgba(11, 61, 145, 0.28); }
+.fxboard-country {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #eaf1ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fxboard-flag {
+  width: 21px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+}
+.fxboard-currency {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  color: #9fc1ef;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fxboard-rate {
+  font-family: 'Courier New', ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffe066;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.fxboard-credit {
+  margin: 4px 0 0;
+  padding: 8px 18px 14px;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  color: rgba(207, 232, 255, 0.45);
+  background: #061024;
+}
+.fxboard-credit a {
+  color: #ffe066;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(255,224,102,0.5);
+}
+.fxboard-credit a:hover { border-bottom-style: solid; }
+body.light-mode .fxboard-title,
+body.light-mode .fxboard-time,
+body.light-mode .fxboard-date { color: #fff; }
+body.light-mode .fxboard {
+  border-color: rgba(29, 79, 168, 0.25);
+  box-shadow: 0 0 0 1px rgba(29,79,168,0.12), 0 16px 40px rgba(20,36,56,0.18);
+}
+body.light-mode .fxboard-body {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(29,79,168,0.08), transparent 55%),
+    linear-gradient(180deg, #fffdf8 0%, #f4ecd8 100%);
+}
+body.light-mode .fxboard-row {
+  background: rgba(29, 79, 168, 0.05);
+}
+body.light-mode .fxboard-row:nth-child(even) {
+  background: rgba(29, 79, 168, 0.1);
+}
+body.light-mode .fxboard-country {
+  color: #142438;
+}
+body.light-mode .fxboard-currency {
+  color: #4a6a92;
+}
+body.light-mode .fxboard-rate {
+  color: var(--accent);
+}
+body.light-mode .fxboard-credit {
+  background: #f4ecd8;
+  color: rgba(20, 36, 56, 0.55);
+}
+body.light-mode .fxboard-credit a {
+  color: var(--accent);
+  border-bottom-color: rgba(29,79,168,0.4);
+}
+@media (max-width: 640px) {
+  .fxboard-body { grid-template-columns: 1fr; padding: 12px 12px 4px; }
+  .fxboard-header { padding: 10px 14px; }
+  .fxboard-title { font-size: 0.85rem; }
+  .fxboard-time { font-size: 1.05rem; }
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.destination-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--gold-soft);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-premium), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.destination-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.destination-card::after {
+  /* scrim so the caption stays legible over any photo */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(4,10,17,0.88) 100%);
+  pointer-events: none;
+}
+.destination-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.4), 0 0 24px rgba(201,162,39,0.18);
+}
+.destination-card:hover img {
+  transform: scale(1.08);
+}
+.destination-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 12px 9px;
+}
+.destination-caption strong {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--text-light);
+  line-height: 1.2;
+}
+.destination-caption small {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.destinations-fx-credit {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-secondary, rgba(255,255,255,0.45));
+  margin-top: 1.2rem;
+}
+.destinations-fx-credit a {
+  color: var(--gold-bright);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+}
+.destinations-fx-credit a:hover {
+  border-bottom-style: solid;
+}
+body.light-mode .destinations-fx-credit { color: rgba(20,36,56,0.55); }
+body.light-mode .destinations-showcase {
+  background: linear-gradient(165deg, rgba(255,253,248,0.95), rgba(244,236,216,0.92));
+  border-color: rgba(29, 79, 168, 0.25);
+}
+body.light-mode .destinations-header h2 { color: #142438; }
+body.light-mode .destinations-subtitle { color: #4a4a4a; }
+body.light-mode .destinations-tag {
+  color: var(--accent);
+  background: rgba(29, 79, 168, 0.06);
+  border-color: rgba(29, 79, 168, 0.3);
+}
+body.light-mode .destination-card { border-color: rgba(29, 79, 168, 0.2); }
+body.light-mode .destination-card:hover { border-color: var(--accent); }
+
+@media (max-width: 900px) {
+  .destinations-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .destinations-showcase { width: auto; margin: 44px 16px; padding: 2.2rem 1.7rem; }
+  .destinations-header h2 { font-size: 1.5rem; }
+  .destinations-grid { grid-template-columns: 1fr; gap: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .destination-card, .destination-card img { transition: none; }
+}
+
+/* ---------- DESTINATION LIGHTBOX (click a picture to view it larger) ---------- */
+.destination-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 4vw;
+  background: rgba(4, 10, 17, 0.9);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.destination-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.destination-lightbox-figure {
+  position: relative;
+  margin: 0;
+  max-width: min(1100px, 92vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.92);
+  transition: transform 0.3s var(--ease-premium);
+}
+.destination-lightbox.is-open .destination-lightbox-figure {
+  transform: scale(1);
+}
+.destination-lightbox-img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid var(--gold-soft);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+}
+.destination-lightbox-caption {
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  text-align: center;
+}
+.destination-lightbox-caption strong {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--gold-bright);
+  margin-right: 8px;
+}
+.destination-lightbox-close {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-soft);
+  background: rgba(14, 34, 51, 0.7);
+  color: var(--text-light);
+  font-size: 1.6rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.destination-lightbox-close:hover {
+  border-color: var(--gold);
+  background: rgba(14, 34, 51, 0.95);
+  transform: rotate(90deg);
+}
+body.light-mode .destination-lightbox { background: rgba(20, 36, 56, 0.85); }
+body.light-mode .destination-lightbox-caption { color: #142438; }
+body.light-mode .destination-lightbox-close {
+  background: rgba(255, 253, 248, 0.85);
+  color: #142438;
+  border-color: rgba(29, 79, 168, 0.3);
+}
+
+/* ---- prev / next navigation between destinations ---- */
+.destination-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-soft);
+  background: rgba(14, 34, 51, 0.7);
+  color: var(--text-light);
+  font-size: 1.7rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.destination-lightbox-nav:hover {
+  border-color: var(--gold);
+  background: rgba(14, 34, 51, 0.95);
+  transform: translateY(-50%) scale(1.1);
+}
+.destination-lightbox-prev { left: 22px; }
+.destination-lightbox-next { right: 22px; }
+body.light-mode .destination-lightbox-nav {
+  background: rgba(255, 253, 248, 0.85);
+  color: #142438;
+  border-color: rgba(29, 79, 168, 0.3);
+}
+
+/* ---- "customs stamp" that hits the corner of the photo on open/step,
+   like a passport getting stamped for a bucket-list destination ---- */
+.destination-lightbox-stamp {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 92px;
+  height: 92px;
+  border: 3px solid var(--gold-bright);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: var(--gold-bright);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+.destination-lightbox-stamp::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--gold-bright);
+  border-radius: 50%;
+}
+.destination-lightbox-stamp span:first-child { font-size: 1.05rem; }
+.destination-lightbox-stamp.stamp-play {
+  animation: destinationStampHit 0.5s cubic-bezier(0.2, 0.85, 0.3, 1) 0.3s both;
+}
+@keyframes destinationStampHit {
+  0%   { opacity: 0; transform: rotate(-20deg) scale(2.6); }
+  55%  { opacity: 0.9; transform: rotate(-13deg) scale(0.9); }
+  75%  { opacity: 1; transform: rotate(-16deg) scale(1.05); }
+  100% { opacity: 0.88; transform: rotate(-15deg) scale(1); }
+}
+
+@media (max-width: 640px) {
+  .destination-lightbox-close { top: 12px; right: 14px; width: 36px; height: 36px; font-size: 1.3rem; }
+  .destination-lightbox-nav { width: 36px; height: 36px; font-size: 1.4rem; }
+  .destination-lightbox-prev { left: 8px; }
+  .destination-lightbox-next { right: 8px; }
+  .destination-lightbox-stamp { width: 68px; height: 68px; font-size: 0.42rem; top: 10px; left: 10px; }
+  .destination-lightbox-stamp span:first-child { font-size: 0.8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .destination-lightbox, .destination-lightbox-figure, .destination-lightbox-close, .destination-lightbox-nav { transition: none; }
+  .destination-lightbox-stamp.stamp-play { animation: none !important; opacity: 0.9; transform: rotate(-15deg) scale(1); }
+}
+
+#about-me {
+  width: 90%;
+  max-width: 1200px; /* <-- About Me panel width */
+  margin: 100px auto;
+  padding: 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.7s ease;
+}
+
+/* Each section panel below shares the same look, but now has its
+   OWN max-width — adjust each one independently right here. */
+#Skills {
+  width: 90%;
+  max-width: 850px; /* <-- Skills panel width */
+  margin: 100px auto;
+  padding: 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.7s ease;
+}
+#Education {
+  width: 90%;
+  max-width: 850px; /* <-- Education panel width */
+  margin: 100px auto;
+  padding: 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.7s ease;
+}
+#Achievements {
+  width: 90%;
+  max-width: 850px; /* <-- Achievements panel width */
+  margin: 100px auto;
+  padding: 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.7s ease;
+}
+#Contact {
+  width: 90%;
+  max-width: 850px; /* <-- Contact panel width */
+  margin: 100px auto;
+  padding: 3.2rem 3.2rem;
+  background: linear-gradient(165deg, rgba(24,47,69,0.9), rgba(14,34,51,0.94));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.7s ease;
+}
+
+#about-me:hover, #Skills:hover, #Education:hover, #Achievements:hover, #Contact:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 162, 39, 0.5);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.45), 0 0 40px rgba(201,162,39,0.1);
+}
+
+/* top accent bar, gold fading into aviation blue */
+#about-me::before, #Skills::before, #Education::before, #Achievements::before, #Contact::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 35%, var(--accent-bright) 65%, var(--accent) 100%);
+}
+
+/* alternating corner fold, gold / aviation-blue */
+#about-me::after, #Education::after, #Contact::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 38px 38px 0;
+  border-color: transparent var(--gold) transparent transparent;
+  opacity: 0.5;
+}
+#Skills::after, #Achievements::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 38px 38px 0;
+  border-color: transparent var(--accent) transparent transparent;
+  opacity: 0.5;
+}
+#about-me header, #Skills header, #Education header, #Achievements header, #Contact header {
+  margin-bottom: 1.8rem;
+}
+#about-me header h1, #Skills header h1, #Education header h1, #Achievements header h1, #Contact header h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 2rem;
+  color: var(--gold-bright);
+  margin: 0 0 0.7rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#about-me header::after, #Skills header::after, #Education header::after, #Achievements header::after, #Contact header::after {
+  content: "";
+  display: block;
+  width: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-bright), var(--gold), transparent);
+  border-radius: 3px;
+  transition: width 0.9s var(--ease-premium) 0.15s;
+}
+.reveal.in-view header::after { width: 80px; }
+@media (prefers-reduced-motion: reduce) {
+  #about-me header::after, #Skills header::after, #Education header::after, #Achievements header::after, #Contact header::after {
+    width: 80px;
+    transition: none;
+  }
+}
+@media (max-width: 640px) {
+  #about-me, #Skills, #Education, #Achievements, #Contact { width: auto; margin: 44px 16px; padding: 2.2rem 1.7rem; }
+  #about-me header h1, #Skills header h1, #Education header h1, #Achievements header h1, #Contact header h1 { font-size: 1.5rem; }
+}
+
+/* === ABOUT ME === */
+#about-me .section-subtitle {
+  font-family: var(--sans);
+  color: var(--text-dim);
+  font-size: 1.09rem;
+  line-height: 1.85;
+  margin: 0 0 2.7rem 0;
+  max-width: 1300px;
+  padding: 2.1rem 1.6rem 1.4rem 1.6rem;
+  background: rgba(10, 25, 40, 0.4);
+  border-radius: 12px;
+  border-left: 3px solid var(--gold-soft);
+  position: relative;
+}
+#about-me .section-subtitle::before {
+  content: "PASSENGER";
+  position: absolute;
+  top: 0.6rem; left: 1.6rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-bright);
+  opacity: 0.8;
+}
+#about-me .section-subtitle::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -1.45rem;
+  height: 6px;
+  background-image: radial-gradient(circle, var(--gold-soft) 1.4px, transparent 1.6px);
+  background-size: 13px 6px;
+  background-repeat: repeat-x;
+  opacity: 0.85;
+}
+#about-me .section-subtitle strong { color: var(--gold-bright); font-weight: 700; }
+
+/* the flight-attendant mission line */
+#about-me h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 1000;
+  color: var(--text-light);
+  font-size: 1rem;
+  margin: 0;
+  padding: 1.3rem 3.6rem 1.7rem 3.6rem;
+  background-image:
+    linear-gradient(90deg, rgba(201,162,39,0.1), rgba(29, 79, 168, 0.14)),
+    repeating-linear-gradient(90deg, rgba(228,192,79,0.4) 0 2px, transparent 2px 5px);
+  background-repeat: no-repeat, repeat-x;
+  background-position: 0 0, center bottom 7px;
+  background-size: 100% 100%, 66% 9px;
+  border-radius: 12px;
+  border: 1px solid var(--gold-soft);
+  position: relative;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.3);
+}
+#about-me h3::before {
+  content: "✈️";
+  position: absolute;
+  left: 1.2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  animation: fly 3.5s ease-in-out infinite;
+}
+#about-me h3::after {
+  content: "🛫";
+  position: absolute;
+  right: 1.2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  animation: depart 2.6s ease-in-out infinite;
+}
+@keyframes fly {
+  0%, 100% { transform: translateY(-50%) translateX(0) rotate(0deg); }
+  50% { transform: translateY(-50%) translateX(5px) rotate(6deg); }
+}
+@keyframes depart {
+  0%, 100% { transform: translateY(-50%) translateX(0) rotate(0deg); }
+  50% { transform: translateY(-50%) translateX(6px) rotate(-10deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #about-me h3::before, #about-me h3::after { animation: none; }
+}
+@media (max-width: 640px) {
+  #about-me h3 { padding: 1.4rem 1.2rem 1.9rem 1.2rem; text-align: center; }
+  #about-me h3::before, #about-me h3::after { position: static; display: inline-block; margin: 0 8px 8px; transform: none; }
+}
+
+/* === SKILLS === */
+.skills-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.6rem 1.5rem;
+}
+.skill-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.1rem 1.4rem 1.6rem;
+  background: linear-gradient(160deg, rgba(16,36,56,0.62), rgba(10,25,40,0.48));
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--gold-soft);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  transition: transform 0.5s var(--ease-premium), box-shadow 0.35s ease, border-color 0.35s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.skill-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(228,192,79,0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.skill-card:hover::after { opacity: 1; }
+.skill-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.4), 0 0 24px rgba(201,162,39,0.18);
+}
+
+/* the wings-pin emblem */
+.skill-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 0.9rem;
+}
+.skill-emblem {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08), transparent 60%),
+              linear-gradient(160deg, rgba(8,20,32,0.9), rgba(4,12,20,0.95));
+  border: 2px solid var(--gold-bright);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.15), 0 6px 14px rgba(0,0,0,0.35);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.skill-card:hover .skill-emblem {
+  box-shadow: 0 0 0 4px rgba(201,162,39,0.25), 0 0 18px rgba(201,162,39,0.35);
+  transform: scale(1.06);
+}
+.skill-wing {
+  width: 40px;
+  height: 13px;
+  background: linear-gradient(100deg, transparent, var(--gold-soft) 35%, var(--gold-bright) 85%);
+  border-radius: 50% 50% 50% 4% / 100% 100% 4% 4%;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.skill-wing-left  { transform: rotate(4deg) scaleX(-1); margin-right: -8px; }
+.skill-wing-right { transform: rotate(-4deg); margin-left: -8px; }
+.skill-card:hover .skill-wing-left  { transform: rotate(10deg) scaleX(-1); }
+.skill-card:hover .skill-wing-right { transform: rotate(-10deg); }
+
+/* little rank bar under the emblem, like a sleeve/cap stripe */
+.skill-title {
+  position: relative;
+  margin: 0 0 0.2rem;
+  padding-top: 0.7rem;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--gold-bright);
+}
+.skill-title::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+}
+.skill-desc {
+  margin: 0;
+  color: var(--text-dim);
+  font-family: var(--sans);
+  font-size: 0.94rem;
+  line-height: 1.7;
+}
+@media (max-width: 720px) {
+  .skills-list { grid-template-columns: 1fr; }
+}
+
+/*=== EDUCATION ===*/
+.education-list {
+  list-style: none;
+  margin: 0; padding: 0 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  position: relative;
+}
+.education-list::before {
+  content: "";
+  position: absolute;
+  left: 5px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: repeating-linear-gradient(180deg, var(--gold) 0 6px, transparent 6px 13px);
+  opacity: 0.6;
+}
+.education-list li {
+  font-family: var(--sans);
+  color: var(--text-light);
+  font-size: 1.09rem;
+  position: relative;
+  padding: 1rem 1.3rem;
+  background: rgba(10, 25, 40, 0.24);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+}
+.education-list li::before {
+  content: "✈️";
+  position: absolute;
+  left: -30px; top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 0.9rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 5px rgba(201,162,39,0.65));
+  animation: fly 3.2s ease-in-out infinite;
+}
+.education-list li strong { color: var(--accent-bright); margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85em; }
+@media (prefers-reduced-motion: reduce) {
+  .education-list li::before { animation: none; }
+}
+
+/* === ACHIEVEMENTS === */
+#Achievements {
+  width: 90%;
+  max-width: 900px;
+}
+.achievements-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.achievements-list li {
+  padding: 1rem 1.3rem;
+  background-image:
+    linear-gradient(160deg, rgba(10,25,40,0.4), rgba(10,25,40,0.2)),
+    linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.16) 45%, transparent 60%);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 250% 100%;
+  background-position: 0 0, 150% 0;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+  border-left: 3px solid var(--gold);
+  position: relative;
+  padding-left: 3.4rem;
+  transition: transform 0.25s ease, background-position 0.6s ease;
+}
+.achievements-list li:hover { transform: translateX(5px); background-position: 0 0, -50% 0; }
+.achievements-list li::before {
+  content: attr(data-icon);
+  position: absolute;
+  left: 1.1rem; top: 50%;
+  transform: translateY(-60%);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, var(--accent) 100%);
+  box-shadow: 0 0 0 2px rgba(201,162,39,0.3), 0 2px 6px rgba(0,0,0,0.4);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  line-height: 1;
+  color: var(--navy);
+  transition: transform 0.25s ease;
+}
+.achievements-list li:hover::before { transform: translateY(-60%) scale(1.12); }
+.achievements-list li::after {
+  content: "";
+  position: absolute;
+  left: 1.32rem; top: 50%;
+  width: 13px; height: 15px;
+  transform: translateY(-8%);
+  background: linear-gradient(180deg, var(--pal-blue), var(--pal-red));
+  clip-path: polygon(0 0, 100% 0, 100% 68%, 50% 100%, 0 68%);
+  z-index: 0;
+}
+.achievements-list li a {
+  color: var(--text-light);
+  font-family: var(--sans);
+  text-decoration: none;
+}
+
+/* === CONTACT === */
+#Contact p {
+  font-family: var(--sans);
+  color: var(--text-light);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+  margin: 0 0 0.8rem 0;
+  padding: 1rem 1.3rem 1rem 4.6rem;
+  background: linear-gradient(160deg, rgba(10,25,40,0.4), rgba(10,25,40,0.2));
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+  border-left: 3px solid var(--accent-bright);
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+#Contact p::before {
+  position: absolute;
+  left: 1.1rem; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold-bright);
+  background: rgba(201,162,39,0.14);
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--gold-soft);
+}
+#Contact p:nth-of-type(1)::before { content: "TEL"; }
+#Contact p:nth-of-type(2)::before { content: "MAIL"; }
+#Contact p:nth-of-type(3)::before { content: "FB"; }
+#Contact p:nth-of-type(4)::before { content: "ADDR"; }
+#Contact p:hover { transform: translateX(5px); border-color: var(--gold); box-shadow: 0 0 16px rgba(201,162,39,0.22); }
+.contact-link { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+.contact-link:hover { color: var(--gold-bright); text-decoration: underline; }
+
+.contact-form {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.contact-form-tag {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin: 0;
+}
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+.contact-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.contact-form-field label {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(207,232,255,0.6);
+}
+.contact-form-field input,
+.contact-form-field textarea {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  color: var(--text-light);
+  background: linear-gradient(160deg, rgba(10,25,40,0.4), rgba(10,25,40,0.2));
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--gold-soft);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  resize: vertical;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.contact-form-field input:focus,
+.contact-form-field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.18);
+}
+.contact-form-btn {
+  align-self: flex-start;
+  position: relative;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 1.6rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--navy);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-premium), box-shadow 0.3s ease, opacity 0.2s ease;
+}
+.contact-form-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(201,162,39,0.35);
+}
+.contact-form-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.contact-form-status {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  margin: 0;
+  min-height: 1.1em;
+}
+.contact-form-status.success { color: #6fe08a; }
+.contact-form-status.error { color: #ff7a7a; }
+@media (max-width: 640px) {
+  .contact-form-grid { grid-template-columns: 1fr; }
+}
+
+/* === Footer === */
+footer {
+  text-align: center;
+  padding: 30px 10px;
+  margin-top: auto;
+  border-top: 1px solid var(--gold-soft);
+  background: linear-gradient(180deg, transparent, rgba(10,25,40,0.4));
+}
+footer p {
+  font-family: var(--sans);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* === Chatbot === */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  border: 2px solid var(--gold-soft);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.4), 0 0 22px rgba(29, 79, 168, 0.3);
+  transition: transform 0.25s ease;
+}
+.chatbot-toggle svg { width: 27px; height: 27px; }
+.chatbot-toggle:hover { transform: scale(1.08); }
+.chatbot-toggle.attention-wiggle { animation: attentionWiggle 0.6s ease; }
+@keyframes attentionWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(8deg); }
+  60% { transform: rotate(-5deg); }
+  80% { transform: rotate(5deg); }
+}
+.chatbot-container {
+  position: fixed;
+  bottom: 102px; right: 30px;
+  width: 370px;
+  max-width: 92vw;
+  height: 470px;
+  max-height: 78vh;
+  background: linear-gradient(165deg, rgba(24,47,69,0.97), rgba(14,34,51,0.98));
+  border: 1px solid var(--gold-soft);
+  border-radius: 16px;
+  box-shadow: 0 20px 55px rgba(0,0,0,0.55);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  transform-origin: bottom right;
+}
+.chatbot-container.active { display: flex !important; animation: popIn 0.25s ease forwards; }
+@keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+.chatbot-header {
+  padding: 1rem 1.3rem;
+  background: rgba(10,25,40,0.6);
+  border-bottom: 1px solid var(--gold-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chatbot-header h3 { font-family: var(--serif); color: var(--gold-bright); font-size: 1.05rem; margin: 0; font-weight: 700; }
+.chatbot-close { background: transparent; border: none; color: var(--text-dim); font-size: 1.1rem; cursor: pointer; }
+.chatbot-close:hover { color: var(--accent-bright); }
+.chatbot-messages {
+  flex: 1;
+  padding: 1.1rem 1.2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110' viewBox='0 0 110 110'%3E%3Cg transform='translate(15,20) rotate(-18)'%3E%3Cpath d='M21 3L2 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5' stroke='%23e4c04f' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.16'/%3E%3C/g%3E%3Cg transform='translate(62,58) rotate(24)'%3E%3Cpath d='M21 3L2 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5' stroke='%23e4c04f' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.1'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 110px 110px;
+  background-repeat: repeat;
+}
+.chatbot-messages::-webkit-scrollbar { width: 5px; }
+.chatbot-messages::-webkit-scrollbar-thumb { background: var(--gold-soft); border-radius: 10px; }
+.message { padding: 0.75rem 1.05rem; border-radius: 12px; line-height: 1.5; font-size: 0.92rem; max-width: 85%; font-family: var(--sans); }
+
+.bot-message { background: rgba(10,25,40,0.6); color: var(--text-light); align-self: flex-start; border: 1px solid var(--gold-soft); }
+.chat-link { color: var(--gold-bright); text-decoration: underline; font-weight: 600; }
+.chat-link:hover { color: var(--gold); }
+.user-message { background: linear-gradient(135deg, var(--accent-bright), var(--accent)); color: var(--cream); align-self: flex-end; }
+
+.chatbot-input { display: flex; gap: 8px; padding: 1rem 1.2rem; background: rgba(10,25,40,0.6); border-top: 1px solid var(--gold-soft); }
+.chatbot-input input { flex: 1; padding: 0.8rem 1.1rem; background: var(--navy); border: 1px solid var(--gold-soft); border-radius: 22px; color: var(--text-light); font-family: var(--sans); font-size: 0.9rem; outline: none; }
+.chatbot-input input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(201,162,39,0.25); }
+.chatbot-input button { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-bright), var(--accent)); border: none; border-radius: 50%; color: var(--cream); cursor: pointer; }
+
+@media (max-width: 640px) {
+  .chatbot-toggle { bottom: 20px; right: 20px; width: 54px; height: 54px; }
+  .chatbot-container { bottom: 86px; right: 10px; left: 10px; width: auto; height: 68vh; }
+}
+
+/* === Light Mode === */
+body.light-mode { background: var(--cream); color: #142438; }
+body.light-mode .network-glow {
+  background: linear-gradient(180deg, #cfe6ff 0%, #e8f3ff 40%, #fdeecb 75%, #fbe2b0 100%);
+}
+body.light-mode .network-glow::before { opacity: 0.35; }
+body.light-mode .cloud { background: rgba(255,255,255,0.55); }
+body.light-mode .navbar { background: linear-gradient(180deg, rgba(244,236,216,0.98), rgba(244,236,216,0.9)); border-bottom-color: rgba(29, 79, 168, 0.25); }
+body.light-mode .navbar a { color: #142438; }
+body.light-mode .navbar a.active, body.light-mode .navbar a:hover { color: var(--accent); }
+body.light-mode .navbar a.active::after { background: var(--accent); }
+
+body.light-mode .hero,
+body.light-mode #about-me, body.light-mode #Skills, body.light-mode #Education,
+body.light-mode #Achievements, body.light-mode #Contact {
+  background: linear-gradient(165deg, rgba(255,253,248,0.95), rgba(253,243,217,0.9));
+  border-color: rgba(29, 79, 168, 0.25);
+}
+body.light-mode .hero {
+  background:
+    linear-gradient(90deg, var(--pal-red) 0 33%, var(--pal-blue) 33% 66%, var(--pal-red) 66% 100%) top / 100% 6px no-repeat,
+    linear-gradient(165deg, rgba(255,253,248,0.95), rgba(253,243,217,0.9));
+}
+body.light-mode .boarding-pass-label { color: #6b5d45; border-bottom-color: rgba(29, 79, 168, 0.25); }
+body.light-mode .hero-info::after { color: var(--accent); border-top-color: rgba(29, 79, 168, 0.25); }
+body.light-mode .hero-image-container::before {
+  background-image:
+    radial-gradient(circle at center, var(--accent) 5px, transparent 6px),
+    radial-gradient(circle at center, var(--accent) 5px, transparent 6px),
+    repeating-linear-gradient(180deg, rgba(29,79,168,0.3) 0 6px, transparent 6px 16px);
+}
+body.light-mode .hero-info h1 {
+  background: linear-gradient(100deg, #142438 0%, #142438 35%, var(--accent) 48%, #142438 61%, #142438 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+body.light-mode .education-list li { color: #142438; background: rgba(29, 79, 168, 0.05); }
+body.light-mode .hero-info .subtitle, body.light-mode .section-subtitle,
+body.light-mode footer p { color: #6b5d45; }
+body.light-mode #about-me .section-subtitle { background: rgba(29, 79, 168, 0.05); color: #1a1a1a; }
+body.light-mode .hero-info h3 { color: #142438; background: rgba(29, 79, 168, 0.08); border-left-color: var(--accent); }
+body.light-mode .hero-image-container::after { color: #fffdf8; }
+
+body.light-mode #about-me header h1, body.light-mode #Skills header h1,
+body.light-mode #Education header h1, body.light-mode #Achievements header h1,
+body.light-mode #Contact header h1 { color: var(--accent); }
+
+body.light-mode #about-me h3,
+body.light-mode .achievements-list li, body.light-mode #Contact p {
+  background: rgba(29, 79, 168, 0.06);
+  color: #142438;
+}
+body.light-mode .skill-card {
+  background: linear-gradient(160deg, rgba(255,253,248,0.95), rgba(253,243,217,0.9));
+  border-color: rgba(29, 79, 168, 0.25);
+  box-shadow: 0 8px 20px rgba(29, 79, 168, 0.1);
+}
+body.light-mode .skill-emblem {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.5), transparent 60%),
+              linear-gradient(160deg, #fffdf8, #f3e6c4);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(29, 79, 168, 0.12), 0 6px 14px rgba(29,79,168,0.15);
+}
+body.light-mode .skill-wing { background: linear-gradient(100deg, transparent, rgba(29,79,168,0.3) 35%, var(--accent) 85%); }
+body.light-mode .skill-title { color: var(--accent); }
+body.light-mode .skill-title::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+body.light-mode .skill-desc { color: #4a5568; }
+body.light-mode .achievements-list li a { color: #142438; }
+body.light-mode .education-list li strong { color: var(--accent); }
+body.light-mode .contact-form-field input,
+body.light-mode .contact-form-field textarea {
+  background: rgba(29, 79, 168, 0.06);
+  color: #142438;
+  border-color: rgba(29, 79, 168, 0.25);
+}
+body.light-mode .contact-form-field label { color: rgba(20,36,56,0.6); }
+
+
+body.light-mode footer { border-top-color: rgba(29, 79, 168, 0.25); }
+body.light-mode .chatbot-container { background: linear-gradient(165deg, #fffdf8, #fdf3d9); border-color: rgba(29, 79, 168, 0.25); }
+body.light-mode .chatbot-header { background: rgba(29, 79, 168, 0.08); }
+body.light-mode .bot-message { background: rgba(29, 79, 168, 0.08); color: #142438; }
+body.light-mode .chatbot-messages {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110' viewBox='0 0 110 110'%3E%3Cg transform='translate(15,20) rotate(-18)'%3E%3Cpath d='M21 3L2 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5' stroke='%231d4fa8' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.14'/%3E%3C/g%3E%3Cg transform='translate(62,58) rotate(24)'%3E%3Cpath d='M21 3L2 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5' stroke='%231d4fa8' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.09'/%3E%3C/g%3E%3C/svg%3E");
+}
+body.light-mode .chatbot-input { background: rgba(29, 79, 168, 0.08); }
+body.light-mode .chatbot-input input { background: #fffdf8; color: #142438; }
+
+/* =============================================================
+   ADD-ON v4 — injected purely by script.js, nothing here touches
+   or depends on any HTML edits. Covers:
+   1) Intro / preloader "GS" splash screen
+   2) Scroll-reveal for sections + list items
+   3) Cursor glow trail
+   4) Ambient floating sky-spark particles
+   ============================================================= */
+
+/* --- 1) Intro / Preloder --- */
+html.intro-locked, html.intro-locked body { overflow: hidden !important; }
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 120% at 50% 32%, #16324a 0%, #0b1c2c 55%, #050d16 100%);
+  overflow: hidden;
+  animation: introFadeIn 0.5s ease both;
+}
+@keyframes introFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.intro-screen.intro-exit {
+  animation: introFadeOut 0.9s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+  pointer-events: none;
+}
+@keyframes introFadeOut {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.1); filter: blur(6px); }
+}
+.intro-sky {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 25%, rgba(234,227,211,0.55), transparent),
+    radial-gradient(1.5px 1.5px at 70% 15%, rgba(234,227,211,0.4), transparent),
+    radial-gradient(1px 1px at 45% 62%, rgba(234,227,211,0.35), transparent),
+    radial-gradient(1.5px 1.5px at 85% 72%, rgba(234,227,211,0.3), transparent),
+    radial-gradient(1px 1px at 12% 80%, rgba(234,227,211,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 58% 88%, rgba(234,227,211,0.25), transparent);
+  animation: twinkle 3.2s ease-in-out infinite alternate;
+}
+.intro-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: 0 20px;
+  animation: introContentRise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes introContentRise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.intro-logo {
+  font-family: var(--serif);
+  font-size: 4.6rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  display: flex;
+}
+.intro-g {
+  color: var(--pal-white);
+  text-shadow: 0 0 30px rgba(245, 247, 250, 0.4);
+  animation: introLetterPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+.intro-s {
+  background: linear-gradient(160deg, #baf5e6 0%, #5fe0c0 45%, #29b596 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(95, 224, 192, 0.5));
+  animation: introLetterPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.32s both;
+}
+@keyframes introLetterPop {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.7); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.intro-tagline {
+  font-family: var(--sans);
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 0;
+}
+.intro-tagline span { color: var(--gold-bright); padding: 0 4px; }
+.intro-loader {
+  width: 220px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(234, 227, 211, 0.12);
+  overflow: hidden;
+}
+.intro-loader-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--accent-bright));
+  box-shadow: 0 0 12px rgba(201, 162, 39, 0.6);
+  transition: width 0.18s ease;
+}
+.intro-percent {
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.intro-plane-track {
+  position: absolute;
+  left: 0; right: 0;
+  top: 64%;
+  height: 40px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.intro-plane {
+  position: absolute;
+  left: -10%;
+  font-size: 1.4rem;
+  animation: introPlaneFly 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(245, 247, 250, 0.45));
+}
+@keyframes introPlaneFly {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(120vw, -12px); opacity: 0; }
+}
+@media (max-width: 640px) {
+  .intro-logo { font-size: 3.2rem; }
+  .intro-loader { width: 170px; }
+}
+
+/* --- 2) Scroll Reveal --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: var(--d, 0s);
+}
+.reveal-item.in-view { opacity: 1; transform: translateY(0); }
+
+/* --- 3) Cursor Glow --- */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 260px; height: 260px;
+  margin-left: -130px; margin-top: -130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.18) 0%, rgba(29, 79, 168, 0.09) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  mix-blend-mode: screen;
+}
+body.light-mode .cursor-glow {
+  background: radial-gradient(circle, rgba(29, 79, 168, 0.12) 0%, rgba(201, 162, 39, 0.07) 45%, transparent 70%);
+  mix-blend-mode: multiply;
+}
+
+/* --- 4) Floating Sky Parks --- */
+.sky-spark {
+  position: absolute;
+  bottom: -10px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-bright), var(--accent-bright));
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.7);
+  animation: skySparkRise linear forwards;
+}
+@keyframes skySparkRise {
+  0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  10%  { opacity: 0.9; }
+  100% { transform: translate(var(--drift, 0px), -100vh) scale(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-item { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .cursor-glow, .sky-spark, .intro-plane, .intro-sky { display: none !important; }
+  .queue-passenger { animation: none !important; }
+  .walking-passenger { display: none !important; }
+  .typing-cursor { display: none !important; }
+}
+
+/* =============================================================
+   ADD-ON v5 — injected purely by script.js, nothing here touches
+   or depends on any HTML edits. Covers:
+   1) Flight progress bar (runway strip + taxiing plane at the top)
+   2) Departure ticker (split-flap status strip under the navbar)
+   3) Seatbelt-sign indicator next to the mode switch
+   ============================================================= */
+
+/* --- 1) Flight progress bar ---
+   A slim runway strip fixed to the very top of the viewport that
+   fills left-to-right as the visitor scrolls the current page,
+   with a tiny plane riding the leading edge of the fill like it's
+   taxiing down a runway. */
+.flight-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1100;
+  background: rgba(234, 227, 211, 0.08);
+  pointer-events: none;
+}
+.flight-progress-fill {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--accent-bright));
+  box-shadow: 0 0 10px rgba(201, 162, 39, 0.6);
+  transition: width 0.12s linear;
+}
+.flight-progress-plane {
+  position: absolute;
+  right: -9px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px rgba(228, 192, 79, 0.8));
+}
+body.light-mode .flight-progress { background: rgba(20, 36, 56, 0.08); }
+@media (prefers-reduced-motion: reduce) {
+  .flight-progress-fill { transition: none; }
+}
+
+/* --- 2) Departure ticker ---
+   A slim split-flap status strip that sits just under the navbar
+   and cycles through short lines about the destination/status,
+   like an airport departures board. Each character "flaps" in
+   with a staggered 3D rotation when a new line loads. */
+.departure-ticker {
+  background: linear-gradient(180deg, rgba(10,20,32,0.96), rgba(6,14,24,0.98));
+  border-bottom: 1px solid var(--gold-soft);
+  padding: 7px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.departure-ticker::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--pal-red);
+  box-shadow: 0 0 8px rgba(210, 16, 52, 0.8);
+  animation: beaconBlink 1.4s steps(1, end) infinite;
+  flex-shrink: 0;
+}
+.departure-ticker-label {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-bright);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.departure-ticker-flap {
+  display: flex;
+  perspective: 240px;
+  min-height: 1.1em;
+}
+.flap-char {
+  display: inline-block;
+  min-width: 0.62em;
+  font-family: 'Courier New', var(--sans), monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  white-space: pre;
+  transform-origin: 50% 50%;
+  animation: flapIn 0.45s ease both;
+}
+@keyframes flapIn {
+  0%   { transform: rotateX(90deg); opacity: 0.2; }
+  60%  { transform: rotateX(-12deg); opacity: 1; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+body.light-mode .departure-ticker {
+  background: linear-gradient(180deg, rgba(255,253,248,0.96), rgba(253,243,217,0.9));
+  border-bottom-color: rgba(29,79,168,0.25);
+}
+body.light-mode .departure-ticker-label { color: var(--accent); }
+body.light-mode .flap-char { color: #142438; }
+@media (max-width: 640px) {
+  .departure-ticker { padding: 6px 12px; gap: 6px; }
+  .departure-ticker-label { display: none; }
+  .flap-char { font-size: 0.66rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flap-char { animation: none; }
+  .departure-ticker::before { animation: none; opacity: 0.7; }
+}
+
+/* --- 3) Seatbelt-sign indicator ---
+   Sits right beside the mode switch in the navbar, like the
+   illuminated safety signs above an aircraft aisle — amber for the
+   night livery, cool green for the day livery — with a slow pulse
+   so it reads as "live" instead of static clutter. */
+.seatbelt-sign {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(10, 25, 40, 0.6);
+  border: 1px solid var(--gold-soft);
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--gold-bright);
+  white-space: nowrap;
+}
+.seatbelt-sign .seatbelt-icon {
+  width: 8px; height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(228, 192, 79, 0.8);
+  animation: seatbeltPulse 2.2s ease-in-out infinite;
+}
+@keyframes seatbeltPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1.1); }
+}
+body.light-mode .seatbelt-sign {
+  background: rgba(29, 79, 168, 0.08);
+  border-color: rgba(29, 79, 168, 0.3);
+  color: var(--accent);
+}
+body.light-mode .seatbelt-sign .seatbelt-icon {
+  background: #2e7d32;
+  box-shadow: 0 0 8px rgba(46, 125, 50, 0.7);
+}
+@media (max-width: 900px) {
+  .seatbelt-sign .seatbelt-text { display: none; }
+  .seatbelt-sign { padding: 6px 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seatbelt-sign .seatbelt-icon { animation: none; opacity: 0.85; }
+}
+
+/* === Language Dropdown === */
+.navbar-lang-corner {
+  list-style: none;
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.lang-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-panel-3));
+  border: 1px solid var(--gold-soft);
+  color: var(--text-light);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 7px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.lang-dropdown-toggle:hover { border-color: var(--gold-bright); }
+.lang-dropdown-toggle .lang-flag { width: 20px; height: 15px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
+.lang-dropdown-toggle .lang-dropdown-arrow {
+  width: 12px; height: 12px;
+  color: var(--gold-bright);
+  transition: transform 0.25s ease;
+}
+.navbar-lang-corner.open .lang-dropdown-toggle .lang-dropdown-arrow { transform: rotate(180deg); }
+.navbar-lang-corner.open .lang-dropdown-toggle {
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 10px rgba(201, 162, 39, 0.45);
+}
+.lang-dropdown-menu {
+  list-style: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 150px;
+  margin: 0;
+  padding: 6px;
+  background: linear-gradient(180deg, rgba(14,34,51,0.99), rgba(10,24,38,0.99));
+  border: 1px solid var(--gold-soft);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 1001;
+}
+.navbar-lang-corner.open .lang-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.lang-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+.lang-option .lang-flag { width: 22px; height: 16px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: middle; }
+.lang-option:hover { opacity: 1; background: rgba(201, 162, 39, 0.12); }
+.lang-option.active {
+  opacity: 1;
+  color: var(--gold-bright);
+  background: rgba(201, 162, 39, 0.18);
+  font-weight: 700;
+}
+body.light-mode .lang-dropdown-toggle { background: linear-gradient(135deg, var(--cream), #e8dcc3); border-color: rgba(29, 79, 168, 0.4); color: #142438; }
+body.light-mode .lang-dropdown-toggle .lang-dropdown-arrow { color: var(--accent); }
+body.light-mode .lang-dropdown-menu { background: linear-gradient(180deg, #fbf6ea, #f0e6cd); border-color: rgba(29, 79, 168, 0.4); }
+body.light-mode .lang-option { color: #142438; }
+body.light-mode .lang-option:hover { background: rgba(29, 79, 168, 0.1); }
+body.light-mode .lang-option.active { color: var(--accent); background: rgba(29, 79, 168, 0.15); }
+@media (max-width: 900px) {
+  .lang-dropdown-toggle .lang-code { display: none; }
+  .lang-dropdown-toggle { padding: 7px 8px; }
+}
+@media (max-width: 640px) {
+  /* Nav links wrap onto extra rows on narrow screens, so pin the
+     corner dropdown to the top of the bar instead of vertical-center,
+     to keep it clear of the wrapped rows below it. */
+  .navbar-lang-corner { left: 10px; top: 14px; transform: none; }
+  .navbar { padding-top: 46px; }
+}
+
+/* ============================================================
+   COUNTRY TRANSITION — fullscreen tourist-spot flash shown
+   whenever the visitor switches language via the dropdown.
+   ============================================================= */
+.country-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.country-transition.active { opacity: 1; }
+.country-transition-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--navy);
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.08);
+  transition: transform 1.8s ease;
+}
+.country-transition.active .country-transition-bg { transform: scale(1); }
+.country-transition-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 28, 44, 0.45) 0%, rgba(11, 28, 44, 0.55) 45%, rgba(11, 28, 44, 0.9) 100%);
+}
+.country-transition-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
+}
+.country-transition.active .country-transition-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+.country-transition-flag {
+  display: block;
+  width: 56px;
+  height: 42px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--gold-soft);
+}
+.country-transition-flag img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.country-transition-place {
+  margin: 0;
+  color: var(--gold-bright);
+  font-size: clamp(1.3rem, 4vw, 2.4rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  perspective: 500px;
+}
+
+/* =============================================================
+   ARRIVAL SEQUENCE — extra polish on the country-transition flash.
+   Everything below is additive: HUD-style lock-on corners (cockpit
+   viewfinder feel), a focus-pull on the background photo, a single
+   diagonal sheen sweep, a flip-in flag with a soft glow, a center-out
+   divider, a split-flap place name (reusing the same flapIn airport-
+   board animation as the departure ticker for visual consistency),
+   and a faint flight-path line with a small plane crossing it.
+   ============================================================= */
+
+/* focus-pull: the photo resolves from soft to sharp as it zooms in */
+.country-transition-bg {
+  filter: blur(14px);
+  transition: transform 1.8s ease, filter 1.4s ease;
+}
+.country-transition.active .country-transition-bg {
+  filter: blur(0);
+}
+
+/* one diagonal light sweep across the whole flash, gold-tinted */
+.country-transition::after {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(115deg,
+    transparent 40%,
+    rgba(228, 192, 79, 0.16) 48%,
+    rgba(245, 240, 222, 0.22) 50%,
+    rgba(228, 192, 79, 0.16) 52%,
+    transparent 60%);
+  transform: translateX(-60%);
+  opacity: 0;
+  pointer-events: none;
+}
+.country-transition.active::after {
+  animation: ctSheen 1.4s ease 0.25s 1;
+}
+@keyframes ctSheen {
+  0%   { transform: translateX(-60%); opacity: 0; }
+  15%  { opacity: 1; }
+  55%  { opacity: 1; }
+  100% { transform: translateX(60%); opacity: 0; }
+}
+
+/* HUD-style lock-on corners, like a viewfinder settling on the shot */
+.ct-hud-frame { position: absolute; inset: 5% 6%; pointer-events: none; }
+.ct-corner {
+  position: absolute;
+  width: 28px; height: 28px;
+  border: 2px solid var(--gold-bright);
+  opacity: 0;
+  transform: scale(1.3);
+  transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+}
+.country-transition.active .ct-corner { opacity: 0.7; transform: scale(1); }
+.ct-corner-tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.ct-corner-tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.ct-corner-bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.ct-corner-br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* flag flips in like a boarding-pass stamp, then gets a brief glow */
+.country-transition-flag {
+  transform: perspective(600px) rotateY(90deg) scale(0.6);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 0.25s, opacity 0.4s ease 0.25s;
+}
+.country-transition.active .country-transition-flag {
+  transform: perspective(600px) rotateY(0deg) scale(1);
+  opacity: 1;
+}
+.country-transition-flag::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 rgba(228, 192, 79, 0);
+}
+.country-transition.active .country-transition-flag::after {
+  animation: ctFlagGlow 1.6s ease 0.7s 1;
+}
+@keyframes ctFlagGlow {
+  0%   { box-shadow: 0 0 0 rgba(228, 192, 79, 0); }
+  40%  { box-shadow: 0 0 22px rgba(228, 192, 79, 0.55); }
+  100% { box-shadow: 0 0 0 rgba(228, 192, 79, 0); }
+}
+
+/* place name flaps in character by character, airport-board style —
+   reuses @keyframes flapIn already defined for the departure ticker */
+.ct-char {
+  display: inline-block;
+  transform-origin: 50% 50%;
+  margin: 0 0.02em;
+  animation: flapIn 0.5s ease both;
+}
+
+/* thin gold divider, drawing outward from the center */
+.ct-divider {
+  width: 0;
+  height: 2px;
+  margin: 2px 0;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+  transition: width 0.7s ease 0.9s;
+}
+.country-transition.active .ct-divider { width: 140px; }
+
+/* faint flight-path line with a small plane crossing it, low third */
+.ct-flightpath {
+  position: absolute;
+  left: 8%; right: 8%; bottom: 16%;
+  height: 1px;
+  border-top: 1px dashed var(--gold-soft);
+  opacity: 0;
+  pointer-events: none;
+}
+.ct-flightpath .ct-plane-icon {
+  position: absolute;
+  top: -9px; left: -6%;
+  font-size: 14px;
+  color: var(--gold-bright);
+  transform: rotate(90deg);
+}
+.country-transition.active .ct-flightpath {
+  animation: ctFlightPathShow 1.8s ease 0.4s 1;
+}
+.country-transition.active .ct-flightpath .ct-plane-icon {
+  animation: ctPlaneFly 1.8s ease 0.4s 1;
+}
+@keyframes ctFlightPathShow {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.5; }
+  85%  { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+@keyframes ctPlaneFly {
+  0%   { left: -6%; }
+  100% { left: 100%; }
+}
+body.light-mode .ct-corner { border-color: var(--accent); }
+body.light-mode .ct-divider { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+body.light-mode .ct-flightpath { border-top-color: rgba(29, 79, 168, 0.3); }
+body.light-mode .ct-flightpath .ct-plane-icon { color: var(--accent); }
+@media (max-width: 640px) {
+  .ct-hud-frame { inset: 8% 5%; }
+  .ct-corner { width: 20px; height: 20px; }
+  .ct-flightpath { bottom: 12%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .country-transition,
+  .country-transition-bg,
+  .country-transition-content {
+    transition: none;
+  }
+  .country-transition::after,
+  .ct-corner,
+  .country-transition-flag,
+  .country-transition-flag::after,
+  .ct-char,
+  .ct-divider,
+  .ct-flightpath,
+  .ct-flightpath .ct-plane-icon {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* =============================================================
+   MERGED FROM fix.css — navbar & section polish additions
+   (kept together here per request instead of a separate file)
+   ============================================================= */
+/* =============================================================
+   FIX.CSS — additive design polish for the FLIGHT PLAN theme
+   Loaded after Portfolio.CSS (already linked in the HTML), so
+   nothing here needs any HTML changes. Focus: navbar + section
+   headers, plus a few small global touches that tie the whole
+   page together. Language dropdown left untouched on purpose.
+   ============================================================= */
+
+/* --- Navbar: links get a center-out hover underline --- */
+.navbar a {
+  overflow: visible;
+}
+.navbar a::before {
+  content: "";
+  position: absolute;
+  left: 50%; right: 50%; bottom: -6px;
+  height: 2px;
+  background: var(--gold-bright);
+  opacity: 0;
+  transition: left 0.25s ease, right 0.25s ease, opacity 0.25s ease;
+}
+.navbar a:hover::before {
+  left: 0; right: 0;
+  opacity: 0.7;
+}
+
+/* the currently active page gets a small gold plane marker instead,
+   so it reads as "you are here" rather than just another hover */
+.navbar a.active::before,
+.navbar a.active:hover::before {
+  content: "✈";
+  left: -20px; right: auto; bottom: auto;
+  top: 50%;
+  height: auto;
+  transform: translateY(-50%) rotate(90deg);
+  background: none;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--gold-bright);
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+}
+body.light-mode .navbar a::before { background: var(--accent); }
+body.light-mode .navbar a.active::before,
+body.light-mode .navbar a.active:hover::before { color: var(--accent); }
+
+/* --- Section HeadersS: small "boarding gate" tag --- */
+#about-me header,
+#Skills header,
+#Education header,
+#Achievements header,
+#Contact header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.gate-tag {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  background: rgba(201, 162, 39, 0.12);
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+}
+body.light-mode .gate-tag {
+  color: var(--accent);
+  background: rgba(29, 79, 168, 0.06);
+  border-color: rgba(29, 79, 168, 0.3);
+}
+
+/* text selection in the site's own gold, instead of the browser default */
+::selection { background: var(--gold); color: var(--navy); }
+body.light-mode ::selection { background: var(--accent); color: var(--cream); }
+
+/* themed scrollbar (Chromium/Edge/Safari) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--navy-panel-2); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold), var(--accent));
+  border-radius: 10px;
+  border: 2px solid var(--navy-panel-2);
+}
+
+/* keyboard focus should be as visible as mouse hover */
+.navbar a:focus-visible,
+.download-cv-btn:focus-visible,
+.skill-card:focus-visible,
+.chatbot-toggle:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+body.light-mode .navbar a:focus-visible,
+body.light-mode .download-cv-btn:focus-visible,
+body.light-mode .skill-card:focus-visible,
+body.light-mode .chatbot-toggle:focus-visible {
+  outline-color: var(--accent);
+}
+
+/* a touch more lift on hover for the toggle buttons already in the theme */
+.mode-switch:hover {
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 0 12px rgba(201,162,39,0.35);
+}
+.chatbot-toggle:hover {
+  box-shadow: 0 0 18px rgba(201,162,39,0.5);
+  transform: translateY(-2px);
+}
+
+/* =============================================================
+   BOARDING PASS CHECK-IN GATE — a full-screen overlay shown once
+   on page load, styled like a boarding pass, that has to be
+   "checked in" (or skipped) before the portfolio underneath is
+   reachable. Purely decorative/cosmetic — not real authentication,
+   no password, nothing is verified or stored on a server.
+   ============================================================= */
+body.gate-active {
+  overflow: hidden;
+}
+.checkin-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #040a13 0%, #0b1c2c 35%, #15304a 65%, #1c2a3d 100%);
+  opacity: 1;
+  transition: opacity 0.6s var(--ease-premium), visibility 0.6s;
+}
+.checkin-gate.gate-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+body.light-mode .checkin-gate {
+  background: linear-gradient(180deg, #eef3fb 0%, #dfe9f6 40%, #f4ecd8 100%);
+}
+
+/* Tourist-destination video playing behind the boarding pass card.
+   Sits above the gradient fallback, below the dark overlay + card,
+   and stays visible whether the site is in light or dark mode. */
+.checkin-gate-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+/* Dark mode ("lights off") -> Boracay footage. Light mode ("lights on") -> general tourist destinations footage. */
+.checkin-gate-video-light {
+  opacity: 0;
+  visibility: hidden;
+}
+body.light-mode .checkin-gate-video-dark {
+  opacity: 0;
+  visibility: hidden;
+}
+body.light-mode .checkin-gate-video-light {
+  opacity: 1;
+  visibility: visible;
+}
+.checkin-gate-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(4,10,19,0.72) 0%, rgba(6,16,28,0.55) 45%, rgba(4,10,19,0.78) 100%);
+}
+body.light-mode .checkin-gate-overlay {
+  background: linear-gradient(180deg, rgba(4,10,19,0.6) 0%, rgba(6,16,28,0.42) 45%, rgba(4,10,19,0.65) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkin-gate-video-dark,
+  .checkin-gate-video-light { display: none; }
+}
+
+/* ---------- Decorative departure/arrival boards flanking the check-in card ---------- */
+.departure-board {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 420px;
+  background: linear-gradient(180deg, #05101c 0%, #081a2c 100%);
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: 10px;
+  padding: 14px 16px 16px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+  font-family: 'Courier New', ui-monospace, monospace;
+  opacity: 0.92;
+}
+.departure-board-left  { left: 5%; }
+.departure-board-right { right: 5%; }
+.departure-board-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--gold-bright);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(201, 162, 39, 0.35);
+}
+.departure-board-clock {
+  color: #cfe8ff;
+  font-weight: 1000;
+  letter-spacing: 0.40sem;
+  font-variant-numeric: tabular-nums;
+}
+.departure-board-wx {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: rgba(207, 232, 255, 0.55);
+  margin: -6px 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(201, 162, 39, 0.25);
+  font-variant-numeric: tabular-nums;
+  cursor: default;
+}
+.departure-board-wx .wx-metar {
+  color: var(--gold-bright);
+}
+@media (max-width: 1500px) {
+  .departure-board-wx { font-size: 0.56rem; }
+}
+.departure-board-row {
+  display: grid;
+  grid-template-columns: 0.75fr 0.85fr 1.2fr 0.45fr 0.95fr;
+  gap: 10px;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  color: #cfe8ff;
+  padding: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+.departure-board-head {
+  color: rgba(207, 232, 255, 0.55);
+  font-size: 0.9rem;
+  font-weight: 1000;
+  letter-spacing: 0.07em;
+  border-bottom: 1px solid rgba(207, 232, 255, 0.15);
+  padding-bottom: 1px;
+  margin-bottom: 2px;
+}
+.departure-board-scroll {
+  height: 350px;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.departure-board-list {
+  animation: departureBoardScroll 40s linear infinite;
+}
+.departure-board-list:hover {
+  animation-play-state: paused;
+}
+@keyframes departureBoardScroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+.db-status { font-weight: 700; text-align: right; }
+.db-boarding  { color: #ffcf4d; animation: dbBlink 1.4s ease-in-out infinite; }
+.db-ontime    { color: #6fe08a; }
+.db-scheduled { color: #8ea8c4; }
+@keyframes dbBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+body.light-mode .departure-board {
+  background: linear-gradient(165deg, rgba(255,253,248,0.98), rgba(244,236,216,0.98));
+  border-color: rgba(29, 79, 168, 0.35);
+}
+body.light-mode .departure-board-clock,
+body.light-mode .departure-board-row {
+  color: #142438;
+}
+body.light-mode .departure-board-head,
+body.light-mode .departure-board-wx {
+  color: rgba(20, 36, 56, 0.55);
+}
+body.light-mode .db-boarding  { color: #b8860b; }
+body.light-mode .db-ontime    { color: #2f9e52; }
+body.light-mode .db-scheduled { color: #5c6f82; }
+@media (max-width: 1500px) {
+  .departure-board { width: 280px; padding: 12px 14px 14px; }
+  .departure-board-left  { left: 1.5%; }
+  .departure-board-right { right: 1.5%; }
+  .departure-board-row { font-size: 0.6rem; }
+}
+/* Hide on smaller viewports — no room beside the card without overlapping it */
+@media (max-width: 1250px) {
+  .departure-board { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-boarding { animation: none; }
+  .departure-board-list { animation: none; }
+  .departure-board-scroll { overflow-y: auto; }
+}
+
+.checkin-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(165deg, rgba(24,47,69,0.96), rgba(11,28,44,0.98));
+  border: 1px solid var(--gold-soft);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 0 50px rgba(201,162,39,0.12);
+  animation: checkinCardIn 0.7s var(--ease-premium);
+}
+.checkin-card.checkin-exit {
+  animation: checkinCardOut 0.55s var(--ease-premium) forwards;
+}
+@keyframes checkinCardIn {
+  0%   { opacity: 0; transform: translateY(30px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes checkinCardOut {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.92) rotate(-3deg); }
+}
+body.light-mode .checkin-card {
+  background: linear-gradient(165deg, rgba(255,253,248,0.98), rgba(244,236,216,0.98));
+}
+
+/* Light/dark switch on the boarding pass card itself */
+.checkin-mode-switch {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 50px;
+  height: 27px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-panel-3));
+  border: 1px solid var(--gold-soft);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.35);
+}
+.checkin-mode-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 19px; height: 19px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(201, 162, 39, 0.6);
+  transition: all 0.3s ease;
+}
+.checkin-mode-switch .icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 11px; transition: opacity 0.3s ease; }
+.checkin-mode-switch .sun { left: 5px; opacity: 1; }
+.checkin-mode-switch .moon { right: 5px; opacity: 0; }
+
+body.light-mode .checkin-mode-switch { background: linear-gradient(135deg, var(--cream), #e8dcc3); border-color: rgba(29, 79, 168, 0.4); }
+body.light-mode .checkin-mode-switch::after { left: 26px; background: linear-gradient(135deg, var(--accent-bright), var(--accent)); }
+body.light-mode .checkin-mode-switch .sun { opacity: 0; }
+body.light-mode .checkin-mode-switch .moon { opacity: 1; }
+
+/* PAL-style tri-color stripe across the top, matching the hero card */
+.checkin-stripe {
+  height: 6px;
+  background: linear-gradient(90deg, var(--pal-red) 0 33%, var(--pal-blue) 33% 66%, var(--gold-bright) 66% 100%);
+}
+
+.checkin-header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+}
+.checkin-plane-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 65%, var(--accent) 100%);
+  color: var(--navy);
+  font-size: 1.4rem;
+  box-shadow: 0 8px 20px rgba(201,162,39,0.35);
+  margin-bottom: 0.9rem;
+  animation: checkinBadgeFloat 3s ease-in-out infinite;
+}
+@keyframes checkinBadgeFloat {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%      { transform: translateY(-5px) rotate(-2deg); }
+}
+.checkin-header h2 {
+  font-family: var(--serif);
+  color: var(--gold-bright);
+  font-size: 1.5rem;
+  margin: 0 0 0.3rem 0;
+}
+body.light-mode .checkin-header h2 { color: #142438; }
+.checkin-tagline {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.checkin-body {
+  padding: 0.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.checkin-body label {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+.checkin-body input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--gold-soft);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  color: var(--text-light);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.checkin-body input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.16);
+}
+body.light-mode .checkin-body input {
+  background: rgba(0,0,0,0.03);
+  color: #142438;
+}
+
+.checkin-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-top: 1px dashed var(--gold-soft);
+  border-bottom: 1px dashed var(--gold-soft);
+}
+.checkin-route-point {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.checkin-route-point span {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  font-family: var(--sans);
+}
+.checkin-route-point strong {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--text-light);
+}
+body.light-mode .checkin-route-point strong { color: #142438; }
+.checkin-route-plane {
+  color: var(--gold-bright);
+  font-size: 1.1rem;
+  animation: checkinPlaneFly 2.4s ease-in-out infinite;
+}
+@keyframes checkinPlaneFly {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(6px); }
+}
+
+.checkin-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+.checkin-details div {
+  text-align: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--gold-soft);
+  border-radius: 8px;
+  padding: 0.5rem 0.3rem;
+}
+.checkin-details span {
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-family: var(--sans);
+  margin-bottom: 2px;
+}
+.checkin-details strong {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--gold-bright);
+  font-variant-numeric: tabular-nums;
+}
+body.light-mode .checkin-details div { background: rgba(0,0,0,0.03); }
+
+.checkin-btn {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--navy);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-premium), box-shadow 0.3s ease;
+}
+.checkin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(201,162,39,0.35);
+}
+.checkin-btn:active {
+  transform: translateY(0);
+}
+
+.checkin-barcode {
+  height: 30px;
+  margin: 0 2rem 1.6rem;
+  border-radius: 4px;
+  opacity: 0.55;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--gold-bright) 0px,
+    var(--gold-bright) 2px,
+    transparent 2px,
+    transparent 5px,
+    var(--gold-bright) 5px,
+    var(--gold-bright) 8px,
+    transparent 8px,
+    transparent 10px,
+    var(--gold-bright) 10px,
+    var(--gold-bright) 13px,
+    transparent 13px,
+    transparent 20px
+  );
+}
+
+@media (max-width: 480px) {
+  .checkin-header { padding: 1.6rem 1.4rem 0.8rem; }
+  .checkin-body { padding: 0.4rem 1.4rem 1.6rem; }
+  .checkin-barcode { margin: 0 1.4rem 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkin-gate, .checkin-card { animation: none; transition: opacity 0.3s ease; }
+  .checkin-plane-badge, .checkin-route-plane { animation: none; }
+}
+
+/* =============================================================
+   ANTI-FLASH BOOT GUARD — the real portfolio content stays
+   invisible until script.js explicitly reveals it (by adding
+   .boot-ready to body), right as the airport gate doors start
+   sliding open. This prevents a flash of the raw portfolio on
+   reload, before the GCDS splash / check-in card / gate sequence
+   has had a chance to cover the screen. The overlays themselves
+   (GCDS splash, check-in gate, airport gate) opt back into
+   visibility explicitly, since they're what SHOULD show first.
+   ============================================================= */
+body {
+  visibility: hidden;
+}
+body.boot-ready {
+  visibility: visible;
+}
+.intro-screen,
+.checkin-gate,
+.airport-gate-overlay {
+  visibility: visible;
+}
+
+/* ---------- Check-in name validation feedback ---------- */
+.checkin-error {
+  display: none;
+  color: var(--pal-red);
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  margin: -0.6rem 0 0;
+}
+.checkin-error.show {
+  display: block;
+  animation: checkinErrorIn 0.3s ease;
+}
+@keyframes checkinErrorIn {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.checkin-body input.checkin-input-error {
+  border-color: var(--pal-red);
+  animation: checkinShake 0.4s ease;
+}
+@keyframes checkinShake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60% { transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkin-error.show { animation: none; }
+  .checkin-body input.checkin-input-error { animation: none; }
+}
+
+/* =============================================================
+   CABIN ANNOUNCEMENT TOAST — slides down from under the navbar on
+   every page switch, e.g. "NOW SERVING: ABOUT ME". Auto-dismisses.
+   ============================================================= */
+.cabin-announcement {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  z-index: 950;
+  transform: translate(-50%, -14px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(19,41,61,0.95), rgba(14,34,51,0.95));
+  border: 1px solid var(--gold-soft);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-premium);
+  white-space: nowrap;
+}
+.cabin-announcement.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.cabin-announcement-icon { font-size: 0.85rem; }
+.cabin-announcement-label {
+  color: var(--gold-bright);
+  font-weight: 700;
+  margin-right: 2px;
+}
+body.light-mode .cabin-announcement {
+  background: linear-gradient(135deg, rgba(255,253,248,0.97), rgba(244,236,216,0.97));
+  color: #142438;
+}
+@media (max-width: 640px) {
+  .cabin-announcement { top: 78px; font-size: 0.62rem; padding: 0.45rem 0.85rem; max-width: 88vw; white-space: normal; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cabin-announcement { transition: opacity 0.2s ease; }
+}
+
+/* =============================================================
+   SECONDARY FLOATING ACTION — Downloadable Boarding Pass.
+   Sits bottom-left, mirroring the chatbot toggle on the right.
+   ============================================================= */
+.secondary-fab {
+  position: fixed;
+  left: 30px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 998;
+  border: 2px solid var(--gold-soft);
+  background: linear-gradient(135deg, var(--navy-panel-3), var(--navy-panel));
+  color: var(--gold-bright);
+  font-size: 1.3rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.secondary-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 26px rgba(201,162,39,0.3);
+}
+.secondary-fab:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+#boardingPassFab { bottom: 30px; }
+.secondary-fab .fab-tooltip {
+  position: absolute;
+  left: 62px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+  background: rgba(11,28,44,0.92);
+  color: var(--text-light);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 1px solid var(--gold-soft);
+}
+.secondary-fab:hover .fab-tooltip,
+.secondary-fab:focus-visible .fab-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+body.light-mode .secondary-fab {
+  background: linear-gradient(135deg, #fffdf8, #f4ecd8);
+  color: var(--accent);
+}
+body.light-mode .secondary-fab .fab-tooltip {
+  background: rgba(255,253,248,0.95);
+  color: #142438;
+}
+@media (max-width: 640px) {
+  .secondary-fab { left: 16px; width: 46px; height: 46px; font-size: 1.1rem; }
+  #boardingPassFab { bottom: 16px; }
+  .secondary-fab .fab-tooltip { display: none; }
+}
+
+/* ---------- Boarding Pass modal — a canvas-drawn, downloadable
+   boarding pass personalized with the visitor's own name. ---------- */
+.boardingpass-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 4vw;
+  background: rgba(4, 10, 17, 0.9);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.boardingpass-modal.is-open { opacity: 1; visibility: visible; }
+.boardingpass-panel {
+  position: relative;
+  width: min(560px, 94vw);
+  background: linear-gradient(165deg, rgba(24,47,69,0.98), rgba(14,34,51,0.99));
+  border: 1px solid var(--gold-soft);
+  border-radius: 16px;
+  padding: 1.6rem;
+  transform: scale(0.94);
+  transition: transform 0.3s var(--ease-premium);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+}
+.boardingpass-modal.is-open .boardingpass-panel { transform: scale(1); }
+.boardingpass-panel h3 {
+  font-family: var(--serif);
+  color: var(--gold-bright);
+  margin: 0 0 0.9rem;
+  font-size: 1.25rem;
+  text-align: center;
+}
+.boardingpass-name-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.boardingpass-name-row input {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--gold-soft);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  color: var(--text-light);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  outline: none;
+}
+.boardingpass-name-row input:focus { border-color: var(--gold); }
+.boardingpass-name-row button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--navy);
+  font-weight: 700;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.boardingpass-name-row button:hover { transform: translateY(-2px); }
+#boardingPassCanvas {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+  display: block;
+}
+.boardingpass-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.1rem;
+}
+.boardingpass-actions button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.3rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.boardingpass-download {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--navy);
+}
+.boardingpass-download:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(201,162,39,0.35); }
+.boardingpass-cancel {
+  background: transparent;
+  border: 1px solid var(--gold-soft) !important;
+  color: var(--text-dim);
+}
+.boardingpass-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-soft);
+  background: rgba(14,34,51,0.7);
+  color: var(--text-light);
+  font-size: 1.3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+.boardingpass-close:hover { transform: rotate(90deg); }
+body.light-mode .boardingpass-panel { background: linear-gradient(165deg, rgba(255,253,248,0.98), rgba(244,236,216,0.98)); }
+body.light-mode .boardingpass-panel h3 { color: #142438; }
+body.light-mode .boardingpass-name-row input { background: rgba(0,0,0,0.03); color: #142438; }
+@media (max-width: 480px) {
+  .boardingpass-panel { padding: 1.1rem; }
+  .boardingpass-name-row { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boardingpass-modal, .boardingpass-panel { transition: opacity 0.2s ease; }
+}

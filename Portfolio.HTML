@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soriano's Portfolio | Home</title>
+  <link rel="stylesheet" href="Portfolio.CSS" />
+  <link rel="stylesheet" href="fix.css" />
+</head>
+<body>
+
+  <div class="network-glow"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-lang-corner" id="langDropdown">
+      <button type="button" class="lang-dropdown-toggle" id="langDropdownToggle" aria-haspopup="listbox" aria-expanded="false">
+        <img class="lang-flag" id="langDropdownFlag" src="https://flagcdn.com/24x18/us.png" alt="US flag" width="24" height="18">
+        <span class="lang-code" id="langDropdownCode">EN</span>
+        <svg class="lang-dropdown-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <ul class="lang-dropdown-menu" id="langDropdownMenu" role="listbox" aria-label="Language">
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="en">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/us.png" alt="US flag" width="24" height="18">
+            <span class="lang-name">English</span>
+          </button>
+        </li>
+
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="es">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/es.png" alt="Spain flag" width="24" height="18">
+            <span class="lang-name">Español</span>
+          </button>
+        </li>
+
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="fr">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/fr.png" alt="France flag" width="24" height="18">
+            <span class="lang-name">Français</span>
+          </button>
+        </li>
+
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="ko">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/kr.png" alt="South Korea flag" width="24" height="18">
+            <span class="lang-name">한국어</span>
+          </button>
+        </li>
+
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="tl">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/ph.png" alt="Philippines flag" width="24" height="18">
+            <span class="lang-name">Tagalog</span>
+          </button>
+        </li>
+
+        <li role="option">
+          <button type="button" class="lang-option" data-lang="ja">
+            <img class="lang-flag" src="https://flagcdn.com/24x18/jp.png" alt="Japan flag" width="24" height="18">
+            <span class="lang-name">日本語</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <ul>
+      <li><a href="#page-home" class="nav-home" data-i18n="nav.home">Home</a></li>
+      <li><a href="#about-me" class="nav-about" data-i18n="nav.about">About Me</a></li>
+      <li><a href="#Skills" class="nav-skills" data-i18n="nav.skills">Skills</a></li>
+      <li><a href="#Education" class="nav-education" data-i18n="nav.education">Education</a></li>
+      <li><a href="#Achievements" class="nav-achievements" data-i18n="nav.achievements">Achievements</a></li>
+      <li><a href="#Contact" class="nav-contact" data-i18n="nav.contact">Contact</a></li>
+      <li class="mode-switch" id="modeSwitch">
+        <span class="icon sun">☀️</span>
+        <span class="icon moon">🌙</span>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- HOME / HERO -->
+  <section id="page-home">
+    <div class="hero">
+      <div class="hero-info">
+        <span class="boarding-pass-label" data-i18n="hero.boardingPass">✈ BOARDING PASS</span>
+        <span class="greeting"><strong data-i18n="hero.greeting">HELLO, I'M</strong></span>
+        <h1>Gian Carlo D. Soriano</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Bachelor of Science in Information Technology — 3rd-Year College Student</p>
+        <h3 data-i18n="hero.tagline">"Learning technology today, serving the skies tomorrow"</h3>
+        <a href="GIANSORIANO.pdf" download class="download-cv-btn">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3V15M12 15L7 10M12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 19H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span data-i18n="hero.cv">Download CV</span>
+        </a>
+      </div>
+
+      <div class="hero-image-container">
+        <img src="Picture.jpg" alt="Picture">
+      </div>
+    </div>
+
+    <!-- FX teaser -->
+    <a href="#about-me" class="fx-teaser" id="fxTeaser" aria-label="Live exchange rate preview: 1 US Dollar is about 58.50 pesos. Activate to see the full Currency Guide.">
+      <span class="fx-teaser-icon" aria-hidden="true">💱</span>
+      <span class="fx-teaser-text">
+        <span class="fx-teaser-label">Live Exchange Rate</span>
+        <span class="fx-teaser-value" id="fxTeaserValue"><img class="fx-teaser-flag" src="https://flagcdn.com/24x18/us.png" srcset="https://flagcdn.com/48x36/us.png 2x" width="24" height="18" alt="">1 USD ≈ ₱58.50</span>
+      </span>
+      <span class="fx-teaser-cta" aria-hidden="true">See full board →</span>
+    </a>
+  </section>
+
+  <!-- ABOUT ME -->
+  <section id="about-me" class="Content">
+    <header>
+      <span class="gate-tag" data-i18n="about.gate">Gate 01 · About</span>
+      <h1 data-i18n="about.title">About Me</h1>
+    </header>
+
+    <p class="section-subtitle" data-i18n-html="about.text">
+      Hi, my name is <strong>Gian Carlo D. Soriano</strong>, a 19-year-old third-year college student at
+      Philippine Christian University, taking up Bachelor of Science in Information Technology.
+      I don't back down from challenges — I'd rather meet them head-on. I may not end up working as a full-time developer,
+      but I'm open to wherever this degree takes me. Outside of tech, I'm also working toward a future in service,
+      with hopes of becoming a <strong>Flight Attendant</strong> someday. The precision, discipline, and adaptability
+      I'm learning in IT are things I plan to carry with me, no matter where I end up.
+    </p>
+
+    <h3 data-i18n="about.tagline">Soon to be part of Philippine Airlines as a Flight Attendant.</h3>
+  </section>
+
+  <!-- Dream Destinations -->
+  <section class="destinations-showcase" id="Destinations">
+    <header class="destinations-header">
+      <span class="destinations-tag" data-i18n="destinations.tag">✈ Now Boarding · Bucket List</span>
+      <h2 data-i18n="destinations.title">Dream Destinations</h2>
+      <p class="destinations-subtitle" data-i18n="destinations.subtitle">Places on my flight plan — where I hope to touch down someday.</p>
+    </header>
+
+    <div class="destinations-grid">
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Boracay_White_Beach.png?width=800" alt="Boracay, Philippines" loading="lazy">
+        <span class="destination-caption"><strong>Boracay</strong><small>Philippines</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Eiffel_Tower_at_night_20150801-2.jpg?width=800" alt="Eiffel Tower, France" loading="lazy">
+        <span class="destination-caption"><strong>Eiffel Tower</strong><small>France</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rialto_Gondoliers.jpg?width=800" alt="Venice, Italy" loading="lazy">
+        <span class="destination-caption"><strong>Venice</strong><small>Italy</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Korea-Jejudo-Cliff-01.jpg?width=800" alt="Jeju Island, South Korea" loading="lazy">
+        <span class="destination-caption"><strong>Jeju Island</strong><small>South Korea</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Supertree_Grove,_Gardens_by_the_Bay,_Singapore_-_20120712-02.jpg?width=800" alt="Gardens by the Bay, Singapore" loading="lazy">
+        <span class="destination-caption"><strong>Gardens by the Bay</strong><small>Singapore</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dome_of_the_Rock_by_Peter_Mulligan.jpg?width=800" alt="Jerusalem, Israel" loading="lazy">
+        <span class="destination-caption"><strong>Jerusalem</strong><small>Israel</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Oia,_Santorini_HDR_sunset.jpg?width=800" alt="Santorini, Greece" loading="lazy">
+        <span class="destination-caption"><strong>Santorini</strong><small>Greece</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Elizabeth_Tower_and_the_north_front_of_the_Palace_of_Westminster,_London.jpg?width=800" alt="Big Ben, United Kingdom" loading="lazy">
+        <span class="destination-caption"><strong>Big Ben</strong><small>United Kingdom</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Statue_of_Liberty_and_a_sightseeing_boat,_Liberty_Island,_New_York.jpg?width=800" alt="Statue of Liberty, USA" loading="lazy">
+        <span class="destination-caption"><strong>Statue of Liberty</strong><small>USA</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dubai_skyline_2015_%28crop%29.jpg?width=800" alt="Burj Khalifa, UAE" loading="lazy">
+        <span class="destination-caption"><strong>Burj Khalifa</strong><small>UAE</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fl%C3%A5msbana_train_at_Fl%C3%A5m_Station.jpg?width=800" alt="Flåmsbana, Norway" loading="lazy">
+        <span class="destination-caption"><strong>Flåmsbana</strong><small>Norway</small></span>
+      </div>
+
+      <div class="destination-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tegallalang_Rice_Terraces_Bali_1.jpg?width=800" alt="Bali, Indonesia" loading="lazy">
+        <span class="destination-caption"><strong>Bali</strong><small>Indonesia</small></span>
+      </div>
+    </div>
+
+    <!-- Foreign Exchange board -->
+    <div class="fxboard" id="fxboard" role="region" aria-labelledby="fxboardTitleLabel">
+      <div class="fxboard-header">
+        <span class="fxboard-title" id="fxboardTitleLabel">Currency Guide</span>
+        <div class="fxboard-clock">
+          <span class="fxboard-time" id="fxboardTime">--:-- --</span>
+          <span class="fxboard-date" id="fxboardDate">—</span>
+        </div>
+      </div>
+      <div class="fxboard-body">
+        <div class="fxboard-col" id="fxboardColA" role="table" aria-label="Exchange rates, part 1">
+          <div class="fxboard-colhead" role="row">
+            <span role="columnheader">COUNTRY</span><span role="columnheader">CURRENCY</span><span role="columnheader">RATE</span>
+          </div>
+        </div>
+        <div class="fxboard-col" id="fxboardColB" role="table" aria-label="Exchange rates, part 2">
+          <div class="fxboard-colhead" role="row">
+            <span role="columnheader">COUNTRY</span><span role="columnheader">CURRENCY</span><span role="columnheader">RATE</span>
+          </div>
+        </div>
+      </div>
+      <p class="fxboard-credit">₱ value per 1 unit of foreign currency — live rates via <a href="https://www.frankfurter.app/" target="_blank" rel="noopener">Frankfurter.app</a> where available</p>
+    </div>
+  </section>
+
+  <!-- Destination Lightbox -->
+  <div class="destination-lightbox" id="destinationLightbox" aria-hidden="true">
+    <button class="destination-lightbox-close" id="destinationLightboxClose" aria-label="Close">&times;</button>
+    <button class="destination-lightbox-nav destination-lightbox-prev" id="destinationLightboxPrev" type="button" aria-label="Previous destination">&lsaquo;</button>
+    <button class="destination-lightbox-nav destination-lightbox-next" id="destinationLightboxNext" type="button" aria-label="Next destination">&rsaquo;</button>
+    <figure class="destination-lightbox-figure">
+      <div class="destination-lightbox-stamp" id="destinationLightboxStamp" aria-hidden="true">
+        <span>&#9992;</span>BUCKET LIST<span>CLEARED</span>
+      </div>
+      <img class="destination-lightbox-img" id="destinationLightboxImg" src="" alt="">
+      <figcaption class="destination-lightbox-caption" id="destinationLightboxCaption"></figcaption>
+    </figure>
+  </div>
+
+  <!-- SKILLS -->
+  <section id="Skills" class="Content">
+    <header>
+      <span class="gate-tag" data-i18n="skills.gate">Gate 02 · Skills</span>
+      <h1 data-i18n="skills.title">Skills</h1>
+    </header>
+
+    <ul class="skills-list">
+      <li class="skill-card">
+        <div class="skill-badge" aria-hidden="true">
+          <span class="skill-wing skill-wing-left"></span>
+          <span class="skill-emblem">🗨️</span>
+          <span class="skill-wing skill-wing-right"></span>
+        </div>
+        <h3 class="skill-title" data-i18n="skills.communication.title">Communication</h3>
+        <p class="skill-desc" data-i18n="skills.communication.desc">I speak up when it matters. I try to communicate ideas clearly and respectfully so we avoid misunderstandings and stay on the same page.</p>
+      </li>
+
+      <li class="skill-card">
+        <div class="skill-badge" aria-hidden="true">
+          <span class="skill-wing skill-wing-left"></span>
+          <span class="skill-emblem">🧭</span>
+          <span class="skill-wing skill-wing-right"></span>
+        </div>
+        <h3 class="skill-title" data-i18n="skills.leadership.title">Leadership</h3>
+        <p class="skill-desc" data-i18n="skills.leadership.desc">For me, leadership isn't about giving orders — it's about earning people's trust. I try to guide, help, and encourage others so everyone gets a chance to contribute.</p>
+      </li>
+
+      <li class="skill-card">
+        <div class="skill-badge" aria-hidden="true">
+          <span class="skill-wing skill-wing-left"></span>
+          <span class="skill-emblem">🤝</span>
+          <span class="skill-wing skill-wing-right"></span>
+        </div>
+        <h3 class="skill-title" data-i18n="skills.teamwork.title">Teamwork</h3>
+        <p class="skill-desc" data-i18n="skills.teamwork.desc">I collaborate openly, with respect and understanding, to help build a more positive environment — because no one should have to succeed alone.</p>
+      </li>
+
+      <li class="skill-card">
+        <div class="skill-badge" aria-hidden="true">
+          <span class="skill-wing skill-wing-left"></span>
+          <span class="skill-emblem">💡</span>
+          <span class="skill-wing skill-wing-right"></span>
+        </div>
+        <h3 class="skill-title" data-i18n="skills.initiative.title">Initiative</h3>
+        <p class="skill-desc" data-i18n="skills.initiative.desc">I act on my own without waiting to be told. I look for ways to improve and stay eager to learn and take on more.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="Education" class="Content">
+    <header>
+      <span class="gate-tag" data-i18n="education.gate">Gate 03 · Education</span>
+      <h1 data-i18n="education.title">Education</h1>
+    </header>
+
+    <ul class="education-list">
+      <li data-i18n-html="education.primary"><strong>Primary:</strong> Epifanio Delos Santos Elementary School (2012 - 2018)</li>
+      <li data-i18n-html="education.secondary"><strong>Secondary:</strong> Manuel G. Araullo High School (2018 - 2022)</li>
+      <li data-i18n-html="education.seniorHigh"><strong>Senior High School:</strong> Philippine Christian University Manila (2022 - 2024)</li>
+      <li data-i18n-html="education.tertiary"><strong>Tertiary:</strong> Philippine Christian University Manila (2024 - Present)</li>
+    </ul>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section id="Achievements" class="Content">
+    <header>
+      <span class="gate-tag" data-i18n="achievements.gate">Gate 04 · Achievements</span>
+      <h1 data-i18n="achievements.title">Achievements</h1>
+    </header>
+
+    <ul class="achievements-list">
+      <li data-icon="&#10003;"><a data-i18n="achievements.cert">Certificate Awardee (From Elementary to College)</a></li>
+      <li data-icon="&#10022;"><a data-i18n="achievements.scholarship">Academic Scholarship Recipient</a></li>
+      <li data-icon="&#9819;"><a data-i18n="achievements.classRep">Class Representative/President</a></li>
+      <li data-icon="&#9873;"><a data-i18n="achievements.studentRep">Student Intramurals Representative (COI Dept. 2026)</a></li>
+      <li data-icon="&#10070;"><a data-i18n="achievements.pro">Public Relations Officer (JPCS Org)</a></li>
+      <li data-icon="&#9733;"><a data-i18n="achievements.honor">Consistent Honor (Grade 10 to Grade 12)</a></li>
+    </ul>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="Contact">
+    <header>
+      <span class="gate-tag" data-i18n="contact.gate">Gate 05 · Contact</span>
+      <h1 data-i18n="contact.title">Contact</h1>
+    </header>
+    <p>📞 09199360292</p>
+    <p>✉️ sorianogiancarlo40@gmail.com</p>
+    <p>📘 <a href="https://www.facebook.com/gian.soriano.935081" target="_blank" rel="noopener" class="contact-link">Gian Soriano</a></p>
+    <p>🏠 San Isidro St. Singalong Malate Manila</p>
+  </section>
+
+  <footer>
+    <p data-i18n="footer.text">&copy; 2026 Gian Soriano. All rights reserved.</p>
+  </footer>
+
+  <!-- Country Transition -->
+  <div class="country-transition" id="countryTransition" aria-hidden="true">
+    <div class="country-transition-bg" id="countryTransitionBg"></div>
+    <div class="country-transition-veil"></div>
+    <div class="country-transition-content">
+      <span class="country-transition-flag" id="countryTransitionFlag"></span>
+      <h2 class="country-transition-place" id="countryTransitionPlace"></h2>
+    </div>
+  </div>
+
+  <!-- AI CHATBOT -->
+  <div class="chatbot-toggle" id="chatbotToggle" role="button" tabindex="0" aria-label="Open chat assistant" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 3L2 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="chatbot-container" id="chatbotContainer">
+    <header class="chatbot-header">
+      <h3 data-i18n="chatbot.title">AI Assistant 🤖</h3>
+      <button class="chatbot-close" id="chatbotClose">✕</button>
+    </header>
+
+    <div class="chatbot-messages" id="chatbotMessages">
+      <div class="message bot-message" id="chatbotInitialMessage" data-i18n="chatbot.greeting">
+        👋 Hello! Welcome to my Portfolio! How can I help you today?
+      </div>
+    </div>
+
+    <form class="chatbot-input" id="chatbotForm">
+      <input type="text" placeholder="Type your message..." id="chatbotText" data-i18n-placeholder="chatbot.placeholder" required>
+      <button type="submit">➤</button>
+    </form>
+  </div>
+
+  <!-- Boarding Pass Check-In Gate -->
+  <div class="checkin-gate gate-hidden" id="checkinGate">
+    <video class="checkin-gate-video checkin-gate-video-dark" id="checkinGateVideoDark" autoplay muted loop playsinline preload="auto" poster="https://commons.wikimedia.org/wiki/Special:FilePath/New_york_times_square-terabass.jpg?width=1200">
+      <source src="https://videos.pexels.com/video-files/17898698/17898698-uhd_2560_1440_30fps.mp4" type="video/mp4">
+    </video>
+
+    <video class="checkin-gate-video checkin-gate-video-light" id="checkinGateVideoLight" muted loop playsinline preload="auto" poster="https://commons.wikimedia.org/wiki/Special:FilePath/Boracay_White_Beach.png?width=1200">
+      <source src="https://cdn.pixabay.com/video/2023/07/29/173725-849818601_large.mp4" type="video/mp4">
+    </video>
+    <div class="checkin-gate-overlay"></div>
+
+  <!-- Decorative airport departure/arrival boards — flank the boarding pass card. -->
+  <div class="departure-board departure-board-left" aria-hidden="true">
+  <div class="departure-board-title">
+    ✈ NOW BOARDING <span class="departure-board-clock">00:00:00</span>
+  </div>
+  <div class="departure-board-row departure-board-head">
+    <span>TIME</span><span>FLIGHT</span><span>DEST</span><span>GATE</span><span>STATUS</span>
+  </div>
+  <div class="departure-board-scroll">
+    <div class="departure-board-list" id="departureBoardListLeft">
+      <div class="departure-board-row" data-time="05:12" data-tz="Asia/Manila">
+        <span class="db-time">--:--</span><span>PCU-101</span><span>MANILA</span><span>01</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="05:28" data-tz="Europe/Paris">
+        <span class="db-time">--:--</span><span>PCU-102</span><span>PARIS</span><span>02</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="05:45" data-tz="Europe/Rome">
+        <span class="db-time">--:--</span><span>PCU-103</span><span>VENICE</span><span>03</span><span class="db-status">--</span>
+      </div>
+      
+      <div class="departure-board-row" data-time="06:03" data-tz="Asia/Seoul">
+        <span class="db-time">--:--</span><span>PCU-104</span><span>JEJU</span><span>04</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="06:22" data-tz="Asia/Singapore">
+        <span class="db-time">--:--</span><span>PCU-105</span><span>SINGAPORE</span><span>05</span><span class="db-status">--</span>
+      </div>
+      
+      <div class="departure-board-row" data-time="06:45" data-tz="Asia/Tokyo">
+        <span class="db-time">--:--</span><span>PCU-106</span><span>TOKYO</span><span>06</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="07:10" data-tz="Australia/Sydney">
+        <span class="db-time">--:--</span><span>PCU-107</span><span>SYDNEY</span><span>07</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="07:38" data-tz="Europe/Madrid">
+        <span class="db-time">--:--</span><span>PCU-108</span><span>BARCELONA</span><span>08</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="08:10" data-tz="Asia/Bangkok">
+        <span class="db-time">--:--</span><span>PCU-109</span><span>BANGKOK</span><span>09</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="08:45" data-tz="Asia/Dubai">
+        <span class="db-time">--:--</span><span>PCU-110</span><span>DUBAI</span><span>10</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="09:25" data-tz="Asia/Hong_Kong">
+        <span class="db-time">--:--</span><span>PCU-111</span><span>HONG KONG</span><span>11</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="10:05" data-tz="Europe/Istanbul">
+        <span class="db-time">--:--</span><span>PCU-112</span><span>ISTANBUL</span><span>12</span><span class="db-status">--</span>
+      </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <div class="departure-board departure-board-right" aria-hidden="true">
+  <div class="departure-board-title">
+    ✈ ARRIVALS <span class="departure-board-clock">00:00:00</span>
+  </div>
+  <div class="departure-board-row departure-board-head">
+    <span>TIME</span><span>FLIGHT</span><span>DEST</span><span>GATE</span><span>STATUS</span>
+  </div>
+  <div class="departure-board-scroll">
+    <div class="departure-board-list" id="departureBoardListRight">
+      <div class="departure-board-row" data-time="05:18" data-tz="Asia/Jerusalem">
+        <span class="db-time">--:--</span><span>PCU-201</span><span>JERUSALEM</span><span>01</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="05:34" data-tz="Europe/Athens">
+        <span class="db-time">--:--</span><span>PCU-202</span><span>SANTORINI</span><span>02</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="05:52" data-tz="Europe/London">
+        <span class="db-time">--:--</span><span>PCU-203</span><span>LONDON</span><span>03</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="06:10" data-tz="America/New_York">
+        <span class="db-time">--:--</span><span>PCU-204</span><span>NEW YORK</span><span>04</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="06:30" data-tz="Asia/Makassar">
+        <span class="db-time">--:--</span><span>PCU-205</span><span>BALI</span><span>05</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="06:52" data-tz="Africa/Cairo">
+        <span class="db-time">--:--</span><span>PCU-206</span><span>CAIRO</span><span>06</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="07:18" data-tz="America/Sao_Paulo">
+        <span class="db-time">--:--</span><span>PCU-207</span><span>RIO</span><span>07</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="07:45" data-tz="America/Toronto">
+        <span class="db-time">--:--</span><span>PCU-208</span><span>TORONTO</span><span>08</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="08:15" data-tz="Europe/Amsterdam">
+        <span class="db-time">--:--</span><span>PCU-209</span><span>AMSTERDAM</span><span>09</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="08:50" data-tz="Europe/Vienna">
+        <span class="db-time">--:--</span><span>PCU-210</span><span>VIENNA</span><span>10</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="09:20" data-tz="Europe/Berlin">
+        <span class="db-time">--:--</span><span>PCU-211</span><span>BERLIN</span><span>11</span><span class="db-status">--</span>
+      </div>
+
+      <div class="departure-board-row" data-time="09:55" data-tz="Asia/Qatar">
+        <span class="db-time">--:--</span><span>PCU-212</span><span>DOHA</span><span>12</span><span class="db-status">--</span>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+  
+  <div class="checkin-card" id="checkinCard">
+  <div class="checkin-mode-switch" id="checkinModeSwitch" role="button" tabindex="0" aria-label="Toggle background theme">
+    <span class="icon sun">☀️</span>
+    <span class="icon moon">🌙</span>
+  </div>
+  <div class="checkin-stripe"></div>
+  <header class="checkin-header">
+    <span class="checkin-plane-badge">✈</span>
+    <h2>Portfolio Airlines</h2>
+    <span class="checkin-tagline">Boarding Pass Check-In</span>
+  </header>
+
+  <div class="checkin-body">
+    <label for="checkinName">Passenger Name</label>
+    <input type="text" id="checkinName" placeholder="Your Name" autocomplete="off" maxlength="30">
+    <p class="checkin-error" id="checkinError">Incorrect Name</p>
+
+    <div class="checkin-route">
+      <div class="checkin-route-point">
+        <span>FROM</span>
+        <strong>YOU</strong>
+      </div>
+      <span class="checkin-route-plane">✈</span>
+      <div class="checkin-route-point">
+        <span>TO</span>
+        <strong>PORTFOLIO</strong>
+      </div>
+    </div>
+
+    <div class="checkin-details">
+      <div><span>FLIGHT</span><strong>PCU-1C</strong></div>
+      <div><span>GATE</span><strong>3C</strong></div>
+      <div><span>SEAT</span><strong id="checkinSeat">2C</strong></div>
+    </div>
+
+    <button type="button" id="checkinSubmit" class="checkin-btn">
+      <span>✈ Check In &amp; Board</span>
+    </button>
+  </div>
+
+    <div class="checkin-barcode" aria-hidden="true"></div>
+  </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
